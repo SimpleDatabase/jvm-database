@@ -54,7 +54,7 @@ class DatabasePool(
     /**
      * Check if an {@link Connection} is valid.
      *
-     * @param connection The {@link Connection} to check if their is valid.
+     * @param connection The {@link Connection} to check if there is valid.
      *
      * @return The boolean if the {@link Connection} is valid.
      */
@@ -72,7 +72,7 @@ class DatabasePool(
     }
 
     /**
-     * Releases a connection and put it back to {@link #POOL} if their is valid.
+     * Releases a connection and put it back to {@link #POOL} if there is valid.
      *
      * If this {@link Connection} is not valid, this function will add a
      * new {@link Connection} to {@link #POOL}.

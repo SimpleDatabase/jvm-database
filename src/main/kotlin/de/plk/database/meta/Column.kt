@@ -1,5 +1,7 @@
 package de.plk.database.meta
 
+import de.plk.database.meta.type.ColumnDataType
+
 /**
  * Represents that the field with annotation
  * is column in the table of the model.

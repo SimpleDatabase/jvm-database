@@ -7,19 +7,19 @@ import java.util.Properties
 /**
  * Holds basic information for new database {@link Connection}`s.
  * <p>
- * Also this class will hold basic informations for the {@link DatabasePool}.
+ * Also this class will hold basic information for the {@link DatabasePool}.
  */
 class DatabaseSource(
 
     /**
      * The sql-server engine type for the connection building.
      */
-    val databaseType: DatabaseType,
+    private val databaseType: DatabaseType,
 
     /**
      * The replacements (inc. the credentials) for the database connection-URI.
      */
-    val properties: Properties
+    private val properties: Properties
 ) {
 
     /**
@@ -44,7 +44,7 @@ class DatabaseSource(
      * Creates a new database {@link Connection}.
      *
      * @return The database {@link Connection}.
-     * @throws SQLException
+     * @throws Exception
      */
     fun createConnection(): Connection = DriverManager.getConnection(
         databaseType.getConnectionURI(

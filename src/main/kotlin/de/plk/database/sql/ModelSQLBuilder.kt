@@ -37,7 +37,7 @@ interface ModelSQLBuilder {
     fun insert(columns: Array<Column>, values: Array<Any>): ModelSQLBuilder
 
     /**
-     * Deletes an row in the database.
+     * Deletes a row in the database.
      *
      * @return The {@link ModelSqlBuilder}.
      */

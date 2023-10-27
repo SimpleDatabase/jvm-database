@@ -1,7 +1,7 @@
 package de.plk.database.meta
 
 /**
- * Represents that the model depends from a table.
+ * Represents that the model is a relational table.
  */
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)

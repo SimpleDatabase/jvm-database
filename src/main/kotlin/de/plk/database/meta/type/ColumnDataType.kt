@@ -1,7 +1,7 @@
-package de.plk.database.meta
+package de.plk.database.meta.type
 
 /**
- * Definies the column data-type of an sql-server engine.
+ * Definies the column data-type of a sql-server engine.
  */
 enum class ColumnDataType {
 
