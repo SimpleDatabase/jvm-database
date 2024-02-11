@@ -1,6 +1,6 @@
-package de.plk.database.meta
+package de.plk.database.model.meta
 
-import de.plk.database.meta.type.ColumnDataType
+import de.plk.database.model.meta.type.ColumnDataType
 
 /**
  * Represents that the field with annotation
@@ -16,6 +16,8 @@ annotation class Column(
      * @return True if this column will be a primary key.
      */
     val primary: Boolean = false,
+
+    val nullable: Boolean = true,
 
     /**
      * Returns the data type of the column.
@@ -36,5 +38,8 @@ annotation class Column(
      *
      * @return The length of data type of the column.
      */
-    val size: Int = 255
+    val size: Int = 255,
+
+    val foreign: Foreign = Foreign()
+
 )

@@ -1,8 +1,8 @@
-package de.plk.database.model.test
+package de.plk.database.test
 
-import de.plk.database.meta.Column
-import de.plk.database.meta.Table
-import de.plk.database.meta.type.ColumnDataType
+import de.plk.database.model.meta.Column
+import de.plk.database.model.meta.Table
+import de.plk.database.model.meta.type.ColumnDataType
 import de.plk.database.model.AbstractModel
 
 /**
