@@ -1,7 +1,12 @@
-package de.plk.database.meta
+package de.plk.database.model.meta
 
 import de.plk.database.model.AbstractModel
+import java.lang.reflect.Field
 import kotlin.reflect.KClass
+import kotlin.reflect.KProperty
+import kotlin.reflect.KProperty1
+import kotlin.reflect.full.declaredMemberProperties
+import kotlin.reflect.full.memberProperties
 
 /**
  * This class holds functions to read meta annotations from a model class.
@@ -34,5 +39,13 @@ object MetaReader {
         modelClass: KClass<out AbstractModel>, annotation: KClass<A>
     ): A {
         return modelClass.annotations.filterIsInstance(annotation.java).first()
+    }
+
+    fun <M : AbstractModel, A : Annotation> readValue(
+        model: M, annotation: KClass<A>, columnName: String
+    ): KProperty1<out M, *> {
+        return model::class.memberProperties.filter {
+           it.annotations.filterIsInstance(annotation.java).size == 1
+        }.first()
     }
 }

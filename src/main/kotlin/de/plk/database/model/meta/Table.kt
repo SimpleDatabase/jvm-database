@@ -1,4 +1,4 @@
-package de.plk.database.meta
+package de.plk.database.model.meta
 
 /**
  * Represents that the model is a relational table.

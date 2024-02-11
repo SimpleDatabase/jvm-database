@@ -1,4 +1,4 @@
-package de.plk.database.meta.type
+package de.plk.database.model.meta.type
 
 /**
  * Definies the column data-type of a sql-server engine.
