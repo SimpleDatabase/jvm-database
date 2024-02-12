@@ -17,7 +17,7 @@ interface QueryBuilder : BelongsBuilder, HasBuilder {
      *
      * @return The {@link ModelSqlBuilder}.
      */
-    fun where(column: String, needle: Any, operand: Operand): QueryBuilder
+    fun where(column: String, needle: Any, operand: Operand = Operand.EQUAL): QueryBuilder
 
     /**
      * Add a condition with OR to the sql-command.
@@ -30,7 +30,7 @@ interface QueryBuilder : BelongsBuilder, HasBuilder {
      *
      * @return The {@link ModelSqlBuilder}.
      */
-    fun orWhere(column: String, needle: Any, operand: Operand): QueryBuilder
+    fun orWhere(column: String, needle: Any, operand: Operand = Operand.EQUAL): QueryBuilder
 
     /**
      * Add a condition with AND to the sql-command.
@@ -41,15 +41,23 @@ interface QueryBuilder : BelongsBuilder, HasBuilder {
      * @param needle  The value you want to check the column with.
      * @param operand The operand you have to check with the condition (=, <>, !=).
      *
-     * @return The {@link ModelSqlBuilder}.
+     * @return The {@link ModelSqlBuilder}.w
      */
-    fun andWhere(column: String, needle: Any, operand: Operand): QueryBuilder
+    fun andWhere(column: String, needle: Any, operand: Operand = Operand.EQUAL): QueryBuilder
 
     /**
      * The operand for where condition.
      */
-    enum class Operand {
-        EQUAL, NONEQUAL;
+    enum class Operand(
+        val operand: String
+    ) {
+        EQUAL("="),
+        NONEQUAL("!="),
+        LIKE("LIKE"),
+        GREATHER(">"),
+        GREATHER_THAN(">="),
+        SMALLER("<"),
+        SMALLER_THAN("<=");
     }
 
 }

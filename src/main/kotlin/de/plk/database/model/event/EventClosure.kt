@@ -3,12 +3,18 @@ package de.plk.database.model.event
 import de.plk.database.model.AbstractModel
 
 /**
- * @author SoftwareBuilds
- * @since 10.02.2024 00:55
- * Copyright © 2024 | SoftwareBuilds | All rights reserved.
+ * Represents the closure for a model event.
+ *
+ * With this u can add statements to the operation like (creating, updating) of
+ * the model.
  */
 fun interface EventClosure<M : AbstractModel> {
 
+    /**
+     * Appliement for the event closure.
+     *
+     * @param model The model to dispatch the event on.
+     */
     fun apply(model: M)
 
 }

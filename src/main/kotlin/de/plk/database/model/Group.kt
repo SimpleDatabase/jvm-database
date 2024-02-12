@@ -35,6 +35,6 @@ class Group(
     }
 
     fun members(): HasMany? {
-        return builder?.hasMany(Member::class)
+        return hasMany(Member::class)
     }
 }
