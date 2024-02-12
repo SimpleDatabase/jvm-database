@@ -4,7 +4,7 @@ import de.plk.database.model.meta.type.ColumnDataType
 
 /**
  * Represents that the field with annotation
- * is column in the table of the model.
+ * is a column in the table of the model.
  */
 @Target(AnnotationTarget.FIELD)
 @Retention(AnnotationRetention.RUNTIME)
@@ -17,6 +17,11 @@ annotation class Column(
      */
     val primary: Boolean = false,
 
+    /**
+     * Returns true if this column is nullable.
+     *
+     * @retur True if column is nullable.
+     */
     val nullable: Boolean = true,
 
     /**
@@ -39,7 +44,5 @@ annotation class Column(
      * @return The length of data type of the column.
      */
     val size: Int = 255,
-
-    val foreign: Foreign = Foreign()
 
 )

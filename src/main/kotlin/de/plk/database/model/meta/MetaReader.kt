@@ -21,7 +21,7 @@ object MetaReader {
      *
      * @return <A> The list of A annotations in a model class.
      */
-    fun <A : Annotation> readFieldAnnotations(
+    fun <A : Annotation> readClassAnnotations(
         modelClass: KClass<out AbstractModel>, annotation: KClass<A>
     ): List<A> {
         return modelClass.annotations.filterIsInstance(annotation.java)
@@ -41,6 +41,15 @@ object MetaReader {
         return modelClass.annotations.filterIsInstance(annotation.java).first()
     }
 
+    /**
+     * Get the searched property of a model.
+     *
+     * @param model      The model data.
+     * @param annotation The specific annotation class.
+     * @param columnName The column to identify the property.
+     *
+     * @return <M> The property of the model.
+     */
     fun <M : AbstractModel, A : Annotation> readValue(
         model: M, annotation: KClass<A>, columnName: String
     ): KProperty1<out M, *> {

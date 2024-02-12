@@ -4,10 +4,12 @@ import de.plk.database.model.relation.Relation
 import de.plk.database.sql.QueryBuilder
 
 /**
- * @author SoftwareBuilds
- * @since 10.02.2024 11:40
- * Copyright © 2024 | SoftwareBuilds | All rights reserved.
+ * Represents the has one relation.
  */
 class HasOne(
+
+    /**
+     * The query builder of the base model.
+     */
     builder: QueryBuilder
 ) : Relation(builder)

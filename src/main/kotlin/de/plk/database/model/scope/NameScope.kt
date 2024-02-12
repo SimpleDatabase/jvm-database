@@ -3,13 +3,15 @@ package de.plk.database.model.scope
 import de.plk.database.model.Member
 
 /**
- * @author SoftwareBuilds
- * @since 10.02.2024 11:45
- * Copyright © 2024 | SoftwareBuilds | All rights reserved.
+ * Represents a name scope.
  */
-class NameScope : Scope<Member> {
+class NameScope : GlobalScope<Member> {
+
+    /**
+     * {@inheritDoc}
+     */
     override fun scope(model: Member) {
-        TODO("Not yet implemented")
+        model.where("name", "Phil")
     }
 
 }
