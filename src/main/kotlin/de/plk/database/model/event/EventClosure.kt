@@ -8,10 +8,10 @@ import de.plk.database.model.AbstractModel
  * With this u can add statements to the operation like (creating, updating) of
  * the model.
  */
-fun interface EventClosure<M : AbstractModel> {
+fun interface EventClosure<M : AbstractModel<M>> {
 
     /**
-     * Appliement for the event closure.
+     * Appliement function for the event closure.
      *
      * @param model The model to dispatch the event on.
      */

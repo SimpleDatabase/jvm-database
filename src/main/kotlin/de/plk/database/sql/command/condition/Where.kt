@@ -1,6 +1,6 @@
 package de.plk.database.sql.command.condition
 
-import de.plk.database.sql.QueryBuilder
+import de.plk.database.sql.build.QueryBuilder
 
 /**
  * Represents the where condition on a sql command.

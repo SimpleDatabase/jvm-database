@@ -7,9 +7,6 @@ import de.plk.database.model.Member
  */
 class NameScope : GlobalScope<Member> {
 
-    /**
-     * {@inheritDoc}
-     */
     override fun scope(model: Member) {
         model.where("name", "Phil")
     }

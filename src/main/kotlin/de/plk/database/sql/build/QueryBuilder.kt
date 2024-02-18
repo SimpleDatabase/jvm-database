@@ -1,12 +1,13 @@
-package de.plk.database.sql
+package de.plk.database.sql.build
 
+import de.plk.database.model.AbstractModel
 import de.plk.database.sql.relation.BelongsBuilder
 import de.plk.database.sql.relation.HasBuilder
 
 /**
  * Represents a sql-builder with the information from the model.
  */
-interface QueryBuilder : BelongsBuilder, HasBuilder {
+interface QueryBuilder<M : AbstractModel<M>> : BelongsBuilder<M>, HasBuilder<M> {
 
     /**
      * Add a condition to the sql-command.
@@ -17,7 +18,7 @@ interface QueryBuilder : BelongsBuilder, HasBuilder {
      *
      * @return The {@link ModelSqlBuilder}.
      */
-    fun where(column: String, needle: Any, operand: Operand = Operand.EQUAL): QueryBuilder
+    fun where(column: String, needle: Any, operand: Operand = Operand.EQUAL): QueryBuilder<M>
 
     /**
      * Add a condition with OR to the sql-command.
@@ -30,7 +31,7 @@ interface QueryBuilder : BelongsBuilder, HasBuilder {
      *
      * @return The {@link ModelSqlBuilder}.
      */
-    fun orWhere(column: String, needle: Any, operand: Operand = Operand.EQUAL): QueryBuilder
+    fun orWhere(column: String, needle: Any, operand: Operand = Operand.EQUAL): QueryBuilder<M>
 
     /**
      * Add a condition with AND to the sql-command.
@@ -43,7 +44,7 @@ interface QueryBuilder : BelongsBuilder, HasBuilder {
      *
      * @return The {@link ModelSqlBuilder}.w
      */
-    fun andWhere(column: String, needle: Any, operand: Operand = Operand.EQUAL): QueryBuilder
+    fun andWhere(column: String, needle: Any, operand: Operand = Operand.EQUAL): QueryBuilder<M>
 
     /**
      * The operand for where condition.

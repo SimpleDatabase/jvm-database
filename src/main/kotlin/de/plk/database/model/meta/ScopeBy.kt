@@ -8,12 +8,13 @@ import kotlin.reflect.KClass
  */
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)
-annotation class Table(
+annotation class ScopeBy(
 
     /**
      * Returns the name of the table.
      *
      * @return The name of the table.
      */
-    val tableName: String
+    val scopes: Array<KClass<out GlobalScope<*>>>
+
 )

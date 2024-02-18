@@ -8,7 +8,7 @@ import kotlin.reflect.KClass
 /**
  * Represents the builder to add has relations to a model.
  */
-interface HasBuilder {
+interface HasBuilder<M : AbstractModel<M>> {
 
     /**
      * Creates a has many relation.
@@ -17,7 +17,7 @@ interface HasBuilder {
      *
      * @return The has many relation.
      */
-    fun <M : AbstractModel> hasMany(model: KClass<M>): HasMany
+    fun <O : AbstractModel<O>> hasMany(model: KClass<O>): HasMany<M>
 
     /**
      * Creates a has one relation.
@@ -26,6 +26,6 @@ interface HasBuilder {
      *
      * @return The has one relation.
      */
-    fun <M : AbstractModel> hasOne(model: KClass<M>): HasOne
+    fun <O : AbstractModel<O>> hasOne(model: KClass<O>): HasOne<M>
 
 }
