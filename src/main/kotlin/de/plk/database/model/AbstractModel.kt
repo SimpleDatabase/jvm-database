@@ -13,7 +13,7 @@ import de.plk.database.model.relation.many.HasMany
 import de.plk.database.model.relation.one.BelongsTo
 import de.plk.database.model.relation.one.HasOne
 import de.plk.database.model.scope.GlobalScope
-import de.plk.database.sql.QueryBuilder
+import de.plk.database.sql.build.QueryBuilder
 import de.plk.database.sql.command.Command
 import de.plk.database.sql.command.CommandClosure
 import de.plk.database.sql.command.condition.Where
@@ -22,47 +22,54 @@ import kotlin.reflect.KClass
 /**
  * Defines that any subclass is a database model.
  */
-abstract class AbstractModel : QueryBuilder, ModelOperation {
+abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, ModelOperation {
+
+    lateinit var model: M
 
     /**
      * The registered events for the model.
      */
-    private val eventMap: Map<ModelEventType, List<EventClosure<AbstractModel>>> = mutableMapOf()
+    private val eventMap = mutableMapOf<ModelEventType, MutableList<EventClosure<M>>>()
 
     /**
      * The registered scopes for this model.
      */
-    private val globalScopes: List<GlobalScope<AbstractModel>> = listOf()
+    protected val globalScopes= mutableListOf<GlobalScope<M>>()
 
     /**
      * True if model ist not created/ saved yet.
      */
-    private var created = false
+    protected var created = false
 
     /**
      * The table information of the model.
      */
-    private val table: Table = MetaReader.readClassAnnotation(this::class, Table::class)
+    protected lateinit var table: Table
 
     /**
      * The columns information of the model.
      */
-    private val columns: List<Column> = MetaReader.readClassAnnotations(this::class, Column::class)
+    protected lateinit var columns: List<Column>
 
     /**
      * The relations of the model.
      */
-    private val relations: List<Relation> = listOf()
+    private val relations = mutableListOf<Relation<M>>()
 
     /**
      * The scopes of the models.
      */
-    private val wheres: List<Where> = listOf()
+    private val wheres = mutableListOf<Where>()
 
     /**
      * The boot function of model.
      */
-    abstract fun boot()
+    open fun boot(model: M) {
+        this.model = model
+
+        table = MetaReader.readClassAnnotation(model::class, Table::class)
+        columns = MetaReader.readAllPropertyAnnotations(model::class, Column::class)
+    }
 
     /**
      * Call/add an event for the model.
@@ -70,12 +77,12 @@ abstract class AbstractModel : QueryBuilder, ModelOperation {
      * @param eventType The type of the event.
      * @param callback  The closure (event statements) to run.
      */
-    protected fun event(eventType: ModelEventType, callback: EventClosure<out AbstractModel>) {
+    protected fun event(eventType: ModelEventType, callback: EventClosure<M>) {
         if (!eventMap.containsKey(eventType)) {
-            eventMap.plus(Pair(eventType, listOf()))
+            eventMap.put(eventType, mutableListOf())
         }
 
-        eventMap[eventType]!!.plus(callback)
+        eventMap[eventType]!!.add(callback)
     }
 
     /**
@@ -84,14 +91,7 @@ abstract class AbstractModel : QueryBuilder, ModelOperation {
      * @param eventType The type to dispatch the events for.
      */
     private fun applyEvent(eventType: ModelEventType) {
-        eventMap[eventType]?.forEach { it.apply(this) }
-    }
-
-    /**
-     * Get the table schema of the model.
-     */
-    private fun getSchema(): Blueprint {
-        return Blueprint(table, columns)
+        eventMap[eventType]?.forEach { it.apply(model) }
     }
 
     /**
@@ -102,36 +102,15 @@ abstract class AbstractModel : QueryBuilder, ModelOperation {
 
             // Creating the model as row in the database.
             false -> {
-                applyEvent(ModelEventType.CREATING)
-
-                Command.execute(Command.INSERT, CommandClosure {
-                    return@CommandClosure arrayOf(table.tableName)
-                })
-
-                applyEvent(ModelEventType.CREATED)
+                created = true
+                applyEvent(ModelEventType.SAVING)
             }
 
             // Saving the model to the given row in the database.
             true -> {
-                applyEvent(ModelEventType.SAVING)
+                applyEvent(ModelEventType.UPDATING)
 
-                Command.execute(Command.UPDATE, CommandClosure {
-                    val updateMapping = StringBuilder()
-
-                    columns.forEach {
-                        val data = MetaReader.readValue(this, Column::class, it.columnName)
-                         updateMapping.append(it.columnName)
-                            .append("=")
-                            .append(data.get(this as Nothing)) // TODO
-                            .append(",")
-                    }.also {
-                        updateMapping.delete(updateMapping.length - 1, updateMapping.length)
-                    }
-
-                    return@CommandClosure arrayOf(table.tableName, updateMapping.toString())
-                })
-
-                applyEvent(ModelEventType.SAVED)
+                applyEvent(ModelEventType.UPDATED)
             }
         }
     }
@@ -150,71 +129,62 @@ abstract class AbstractModel : QueryBuilder, ModelOperation {
     }
 
     /**
-     * Add a global scope to the model.
-     *
-     * @param scope The global scope.
-     */
-    fun <M : AbstractModel> addGlobalScope(scope: GlobalScope<M>) {
-        globalScopes.plus(scope)
-    }
-
-    /**
      * {@inheritDoc}
      */
-    override fun where(column: String, needle: Any, operand: QueryBuilder.Operand): QueryBuilder {
-        wheres.plus(Where(column, needle, operand))
+    override fun where(column: String, needle: Any, operand: QueryBuilder.Operand): QueryBuilder<M> {
+        wheres.add(Where(column, needle, operand))
         return this
     }
 
     /**
      * {@inheritDoc}
      */
-    override fun orWhere(column: String, needle: Any, operand: QueryBuilder.Operand): QueryBuilder {
-        wheres.plus(Where(column, needle, operand, Where.Type.OR))
+    override fun orWhere(column: String, needle: Any, operand: QueryBuilder.Operand): QueryBuilder<M> {
+        wheres.add(Where(column, needle, operand, Where.Type.OR))
         return this
     }
 
     /**
      * {@inheritDoc}
      */
-    override fun andWhere(column: String, needle: Any, operand: QueryBuilder.Operand): QueryBuilder {
-        wheres.plus(Where(column, needle, operand, Where.Type.AND))
+    override fun andWhere(column: String, needle: Any, operand: QueryBuilder.Operand): QueryBuilder<M> {
+        wheres.add(Where(column, needle, operand, Where.Type.AND))
         return this
     }
 
     /**
      * {@inheritDoc}
      */
-    override fun <M : AbstractModel> belongsToMany(model: KClass<M>): BelongsToMany {
-        return BelongsToMany(this).also {
-            relations.plus(it)
+    override fun <O : AbstractModel<O>> belongsToMany(model: KClass<O>): BelongsToMany<M> {
+        return BelongsToMany(this.model).also {
+            relations.add(it)
         }
     }
 
     /**
      * {@inheritDoc}
      */
-    override fun <M : AbstractModel> belongsTo(model: KClass<M>): BelongsTo {
-        return BelongsTo(this).also {
-            relations.plus(it)
+    override fun <O : AbstractModel<O>> belongsTo(model: KClass<O>): BelongsTo<M> {
+        return BelongsTo(this.model).also {
+            relations.add(it)
         }
     }
 
     /**
      * {@inheritDoc}
      */
-    override fun <M : AbstractModel> hasMany(model: KClass<M>): HasMany {
-        return HasMany(this).also {
-            relations.plus(it)
+    override fun <O : AbstractModel<O>> hasMany(model: KClass<O>): HasMany<M> {
+        return HasMany(this.model).also {
+            relations.add(it)
         }
     }
 
     /**
      * {@inheritDoc}
      */
-    override fun <M : AbstractModel> hasOne(model: KClass<M>): HasOne {
-        return HasOne(this).also {
-            relations.plus(it)
+    override fun <O : AbstractModel<O>> hasOne(model: KClass<O>): HasOne<M> {
+        return HasOne(this.model).also {
+            relations.add(it)
         }
     }
 

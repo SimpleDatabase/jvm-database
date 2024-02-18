@@ -3,11 +3,12 @@ package de.plk.database.model
 import de.plk.database.action.companion.ModelEventType
 import de.plk.database.model.event.EventClosure
 import de.plk.database.model.meta.Column
+import de.plk.database.model.meta.ScopeBy
+import de.plk.database.model.meta.Table
 import de.plk.database.model.meta.type.ColumnDataType
-import de.plk.database.model.relation.many.BelongsToMany
 import de.plk.database.model.relation.one.BelongsTo
 import de.plk.database.model.scope.NameScope
-import de.plk.database.sql.QueryBuilder
+import de.plk.database.sql.build.QueryBuilder
 import java.util.UUID
 
 /**
@@ -15,6 +16,10 @@ import java.util.UUID
  * @since 10.02.2024 01:42
  * Copyright © 2024 | SoftwareBuilds | All rights reserved.
  */
+@ScopeBy(
+    [NameScope::class]
+)
+@Table("members")
 class Member(
     @Column(
         columnName = "memberId",
@@ -23,34 +28,32 @@ class Member(
         size = 16
     )
     val memberId: UUID
-) : AbstractModel() {
+) : AbstractModel<Member>() {
 
-    @Column(
-        columnName = "name",
-        dataType = ColumnDataType.VARCHAR
-    )
+    init {
+        boot(this)
+    }
+
+
     lateinit var name: String
 
-    @Column(
-        columnName = "age",
-        dataType = ColumnDataType.INT
-    )
+
     var age: Int = 0
 
-    override fun boot() {
+    override fun boot(model: Member) {
+        super.boot(model)
+
         event(ModelEventType.SAVING, EventClosure<Member> {
             it.name = "test";
             it.save()
         })
-
-        addGlobalScope(NameScope())
     }
 
     fun underEighteen() {
         where("age", 18, QueryBuilder.Operand.SMALLER)
     }
 
-    fun group(): BelongsTo? {
+    fun group(): BelongsTo<Member> {
         return belongsTo(Group::class)
     }
 }

@@ -5,7 +5,7 @@ import de.plk.database.model.AbstractModel
 /**
  * Represents the abstract global scope for a model.
  */
-interface GlobalScope<M : AbstractModel> {
+interface GlobalScope<M : AbstractModel<M>> {
 
     /**
      * The function for the scope restriction.

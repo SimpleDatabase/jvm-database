@@ -8,7 +8,7 @@ import kotlin.reflect.KClass
 /**
  * Represents the builder to add belongs relations to a model.
  */
-interface BelongsBuilder {
+interface BelongsBuilder<M : AbstractModel<M>> {
 
     /**
      * Creates a belongs many relation.
@@ -17,7 +17,7 @@ interface BelongsBuilder {
      *
      * @return The belongs many relation.
      */
-    fun <M : AbstractModel> belongsToMany(model: KClass<M>): BelongsToMany
+    fun <O : AbstractModel<O>> belongsToMany(model: KClass<O>): BelongsToMany<M>
 
     /**
      * Creates a belongs one relation.
@@ -26,6 +26,6 @@ interface BelongsBuilder {
      *
      * @return The belongs one relation.
      */
-    fun <M : AbstractModel> belongsTo(model: KClass<M>): BelongsTo
+    fun <O : AbstractModel<O>> belongsTo(model: KClass<O>): BelongsTo<M>
 
 }

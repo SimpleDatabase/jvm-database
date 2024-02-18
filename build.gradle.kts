@@ -12,8 +12,8 @@ repositories {
 }
 
 dependencies {
-    implementation(group = "com.mysql", name = "mysql-connector-j", version = "8.0.32")
-    implementation(group = "org.xerial", name = "sqlite-jdbc", version = "3.41.0.0")
+    implementation(group = "com.mysql", name = "mysql-connector-j", version = "8.3.0")
+    implementation(group = "org.xerial", name = "sqlite-jdbc", version = "3.45.1.0")
     testImplementation(kotlin("test"))
     implementation(kotlin("reflect"))
 }

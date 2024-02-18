@@ -80,16 +80,6 @@ enum class Command(
         private lateinit var pool: DatabasePool
 
         /**
-         * Setting up the pool with credentials and amount of connections.
-         *
-         * @param poolSize       The size of active connections.
-         * @param databaseSource The database settings/ credentials.
-         */
-        fun setupPool(poolSize: Byte, databaseSource: DatabaseSource) {
-            pool == DatabasePool(databaseSource, poolSize)
-        }
-
-        /**
          * Execute a sql command.
          *
          * @param command The command (SELECT, UPDATE, ...).
