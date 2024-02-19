@@ -10,5 +10,5 @@ import java.util.*
  */
 fun main() {
     val member = Group()
-    member.save()
+    member.getSchema().create()
 }

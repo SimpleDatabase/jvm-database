@@ -18,6 +18,7 @@ import de.plk.database.sql.command.Command
 import de.plk.database.sql.command.CommandClosure
 import de.plk.database.sql.command.condition.Where
 import kotlin.reflect.KClass
+import kotlin.reflect.full.createInstance
 
 /**
  * Defines that any subclass is a database model.
@@ -54,12 +55,16 @@ abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, ModelOpera
     /**
      * The relations of the model.
      */
-    private val relations = mutableListOf<Relation<M>>()
+    private val relations = mutableListOf<Relation<M, out AbstractModel<*>>>()
 
     /**
      * The scopes of the models.
      */
     private val wheres = mutableListOf<Where>()
+
+    fun <O : AbstractModel<O>> getSchema(): Blueprint<M, O> {
+        return Blueprint(table, columns, (relations as List<Relation<M, O>>))
+    }
 
     /**
      * The boot function of model.
@@ -155,8 +160,8 @@ abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, ModelOpera
     /**
      * {@inheritDoc}
      */
-    override fun <O : AbstractModel<O>> belongsToMany(model: KClass<O>): BelongsToMany<M> {
-        return BelongsToMany(this.model).also {
+    override fun <O : AbstractModel<O>> belongsToMany(model: KClass<O>): BelongsToMany<M, O> {
+        return BelongsToMany(this.model, model.createInstance()).also {
             relations.add(it)
         }
     }
@@ -164,8 +169,8 @@ abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, ModelOpera
     /**
      * {@inheritDoc}
      */
-    override fun <O : AbstractModel<O>> belongsTo(model: KClass<O>): BelongsTo<M> {
-        return BelongsTo(this.model).also {
+    override fun <O : AbstractModel<O>> belongsTo(model: KClass<O>): BelongsTo<M, O> {
+        return BelongsTo(this.model, model.createInstance()).also {
             relations.add(it)
         }
     }
@@ -173,8 +178,8 @@ abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, ModelOpera
     /**
      * {@inheritDoc}
      */
-    override fun <O : AbstractModel<O>> hasMany(model: KClass<O>): HasMany<M> {
-        return HasMany(this.model).also {
+    override fun <O : AbstractModel<O>> hasMany(model: KClass<O>): HasMany<M, O> {
+        return HasMany(this.model, model.createInstance()).also {
             relations.add(it)
         }
     }
@@ -182,8 +187,8 @@ abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, ModelOpera
     /**
      * {@inheritDoc}
      */
-    override fun <O : AbstractModel<O>> hasOne(model: KClass<O>): HasOne<M> {
-        return HasOne(this.model).also {
+    override fun <O : AbstractModel<O>> hasOne(model: KClass<O>): HasOne<M, O> {
+        return HasOne(this.model, model.createInstance()).also {
             relations.add(it)
         }
     }

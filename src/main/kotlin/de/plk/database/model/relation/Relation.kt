@@ -6,16 +6,14 @@ import de.plk.database.sql.build.QueryBuilder
 /**
  * Represents the abstract relation.
  */
-open class Relation<M : AbstractModel<M>>(
+open class Relation<M : AbstractModel<M>, O : AbstractModel<O>>(
 
     /**
      * The query builder of the base model.
      */
-    val builder: QueryBuilder<M>
+    val builder: QueryBuilder<M>,
+
+    val related: O
 ) {
-
-    lateinit var related: AbstractModel<M>
-
-
 
 }

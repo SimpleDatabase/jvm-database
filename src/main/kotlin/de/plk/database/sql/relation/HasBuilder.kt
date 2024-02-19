@@ -17,7 +17,7 @@ interface HasBuilder<M : AbstractModel<M>> {
      *
      * @return The has many relation.
      */
-    fun <O : AbstractModel<O>> hasMany(model: KClass<O>): HasMany<M>
+    fun <O : AbstractModel<O>> hasMany(model: KClass<O>): HasMany<M, O>
 
     /**
      * Creates a has one relation.
@@ -26,6 +26,6 @@ interface HasBuilder<M : AbstractModel<M>> {
      *
      * @return The has one relation.
      */
-    fun <O : AbstractModel<O>> hasOne(model: KClass<O>): HasOne<M>
+    fun <O : AbstractModel<O>> hasOne(model: KClass<O>): HasOne<M, O>
 
 }

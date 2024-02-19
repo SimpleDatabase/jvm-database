@@ -17,7 +17,7 @@ interface BelongsBuilder<M : AbstractModel<M>> {
      *
      * @return The belongs many relation.
      */
-    fun <O : AbstractModel<O>> belongsToMany(model: KClass<O>): BelongsToMany<M>
+    fun <O : AbstractModel<O>> belongsToMany(model: KClass<O>): BelongsToMany<M, O>
 
     /**
      * Creates a belongs one relation.
@@ -26,6 +26,6 @@ interface BelongsBuilder<M : AbstractModel<M>> {
      *
      * @return The belongs one relation.
      */
-    fun <O : AbstractModel<O>> belongsTo(model: KClass<O>): BelongsTo<M>
+    fun <O : AbstractModel<O>> belongsTo(model: KClass<O>): BelongsTo<M, O>
 
 }
