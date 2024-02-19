@@ -20,15 +20,15 @@ import java.util.UUID
     [NameScope::class]
 )
 @Table("members")
-class Member(
+class Member : AbstractModel<Member>() {
+
     @Column(
         columnName = "memberId",
         primary = true,
         dataType = ColumnDataType.VARCHAR,
         size = 16
     )
-    val memberId: UUID
-) : AbstractModel<Member>() {
+    val memberId: UUID = UUID.randomUUID()
 
     init {
         boot(this)
@@ -53,7 +53,7 @@ class Member(
         where("age", 18, QueryBuilder.Operand.SMALLER)
     }
 
-    fun group(): BelongsTo<Member> {
+    fun group(): BelongsTo<Member, Group> {
         return belongsTo(Group::class)
     }
 }

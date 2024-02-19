@@ -1,15 +1,18 @@
 package de.plk.database.model.migration
 
-import de.plk.database.DatabasePool
+import de.plk.database.model.AbstractModel
 import de.plk.database.model.meta.Column
+import de.plk.database.model.meta.MetaReader
 import de.plk.database.model.meta.Table
+import de.plk.database.model.relation.Relation
+import de.plk.database.model.relation.many.HasMany
 import de.plk.database.sql.command.Command
 import de.plk.database.sql.command.CommandClosure
 
 /**
  * Represens the schema of the table.
  */
-class Blueprint(
+class Blueprint<M : AbstractModel<M>, O : AbstractModel<O>>(
 
     /**
      * The table information of table.
@@ -19,50 +22,64 @@ class Blueprint(
     /**
      * The column information of table.
      */
-    val columns: List<Column>
+    val columns: List<Column>,
+
+    val relations: List<Relation<M, O>>
 ) {
 
-    /**
-     * Update the table on the database.
-     *
-     * @param pool The database pool with connections.
-     */
-    fun update(pool: DatabasePool) {
+    private fun addRelations(): Array<String> {
+        var relationLines = arrayOf<String>()
+        relations.forEach {
+            val relatedTableInformation = MetaReader.readClassAnnotation(it.related::class, Table::class)
+            val primaryColumn = MetaReader.readAllPropertyAnnotations(it.related::class, Column::class).first()
 
+            when(it) {
+                is HasMany -> {
+                    relationLines = relationLines.plus(arrayOf(
+                        primaryColumn.columnName,
+                        primaryColumn.dataType.withSize(primaryColumn.size),
+                        "FOREIGN KEY REFERENCES",
+                        relatedTableInformation.tableName,
+                        table.tableName,
+                        "(${primaryColumn.columnName})"
+                    ).joinToString(" "))
+                }
+            }
+        }
+
+        return relationLines
     }
 
     /**
      * Create the table on the database.
-     *
-     * @param pool The database pool with connections.
      */
-    fun create(pool: DatabasePool) {
+    fun create() {
         Command.execute(Command.CREATE, CommandClosure {
-            val columnMapping: StringBuilder = StringBuilder()
-
             if (columns.isEmpty())
                 throw RuntimeException("Es muss mindestens eine Spalte angeben werden!")
 
+            var columnAttributes = arrayOf<String>()
+
             // add the schema row for each column
             columns.forEach {
-                columnMapping.append(it.columnName)
-                    .append(" ")
-                    .append(it.dataType.withSize(it.size))
-                    .append(" ")
+
+                var columnAttribut = arrayOf(
+                    it.columnName,
+                    it.dataType.withSize(it.size)
+                )
 
                 if (it.primary)
-                    columnMapping.append("PRIMARY KEY")
+                    columnAttribut = columnAttribut.plus("PRIMARY KEY")
 
                 if (!it.nullable)
-                    columnMapping.append("NOT NULL")
+                    columnAttribut = columnAttribut.plus("NOT NULL")
 
-                columnMapping.append(",")
-            }.also {
-                // remove the last ',' from the command
-                columnMapping.delete(columnMapping.length - 1, columnMapping.length)
+                columnAttributes = columnAttributes.plus(columnAttribut.joinToString(" "))
             }
 
-            return@CommandClosure arrayOf(table.tableName, columnMapping.toString())
+            columnAttributes = columnAttributes.plus(addRelations())
+
+            return@CommandClosure arrayOf(table.tableName, columnAttributes.joinToString(","))
         })
     }
 

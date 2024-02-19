@@ -55,7 +55,7 @@ enum class Command(
      * @return The replaced command string.
      */
     fun with(vararg replacements: String): String {
-        return command.format(replacements)
+        return command.format(*replacements)
     }
 
     /**
@@ -88,12 +88,17 @@ enum class Command(
          * @return The result of the command.
          */
         fun execute(command: Command, closure: CommandClosure): CommandResult {
-            val connection: Connection = pool.getConnection()
             val result = CommandResult(command != SELECT)
 
             // Command string replacement.
             val commandReplacements: Array<String> = closure.apply()
             val sql = command.with(*commandReplacements)
+
+            println(sql)
+
+            return result
+
+            val connection = pool.getConnection()
 
             val statement: PreparedStatement = connection.prepareStatement(sql)
 
@@ -125,6 +130,8 @@ enum class Command(
                         }
                     }
                 }
+
+                pool.releaseConnection(connection)
 
                 return result
             }

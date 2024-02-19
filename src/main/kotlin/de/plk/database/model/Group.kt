@@ -20,15 +20,24 @@ import java.util.UUID
     [NameScope::class]
 )
 @Table("groups")
-class Group: AbstractModel<Group>() {
+class Group : AbstractModel<Group>() {
 
     @Column(
         columnName = "groupId",
         primary = true,
+        nullable = false,
         dataType = ColumnDataType.VARCHAR,
         size = 16
     )
     val groupId: UUID = UUID.randomUUID()
+
+    @Column(
+        columnName = "groupName",
+        nullable = true,
+        dataType = ColumnDataType.VARCHAR,
+        size = 255
+    )
+    lateinit var groupName: String
 
     init {
         boot(this)
@@ -37,10 +46,12 @@ class Group: AbstractModel<Group>() {
     override fun boot(model: Group) {
         super.boot(model)
 
+        members()
+
         event(ModelEventType.SAVING, EventClosure<Group> {
             println("Element with ID (${it.groupId}) saving.")
 
-            println(MetaReader.readValue(this, "groupId"))
+            println("Value of groupId ${MetaReader.readValue(this, "groupId")}")
         })
 
         event(ModelEventType.UPDATING, EventClosure<Group> {
@@ -53,7 +64,7 @@ class Group: AbstractModel<Group>() {
 
     }
 
-    fun members(): HasMany<Group> {
+    fun members(): HasMany<Group, Member> {
         return hasMany(Member::class)
     }
 }

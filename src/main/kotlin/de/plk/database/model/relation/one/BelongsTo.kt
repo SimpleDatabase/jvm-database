@@ -7,10 +7,11 @@ import de.plk.database.sql.build.QueryBuilder
 /**
  * Represents the belongs to relation.
  */
-class BelongsTo<M : AbstractModel<M>> (
+class BelongsTo<M : AbstractModel<M>, O : AbstractModel<O>> (
 
     /**
      * The query builder of the base model.
      */
-    builder: QueryBuilder<M>
-) : Relation<M>(builder)
+    builder: QueryBuilder<M>,
+    related: O
+) : Relation<M, O>(builder, related)
