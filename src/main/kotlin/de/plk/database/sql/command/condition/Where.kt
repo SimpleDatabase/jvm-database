@@ -36,8 +36,7 @@ data class Where(
 
         when (type) {
             Type.OR -> where.append(" OR ")
-            Type.AND -> where.append(" AND ")
-            Type.NORMAL -> {}
+            Type.AND, Type.NORMAL -> where.append(" AND ")
         }
 
         where.append("WHERE ${column} ${operand.operand} ${needle}")
