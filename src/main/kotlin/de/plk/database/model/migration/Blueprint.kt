@@ -40,7 +40,6 @@ class Blueprint<M : AbstractModel<M>, O : AbstractModel<O>>(
                         primaryColumn.dataType.withSize(primaryColumn.size),
                         "FOREIGN KEY REFERENCES",
                         relatedTableInformation.tableName,
-                        table.tableName,
                         "(${primaryColumn.columnName})"
                     ).joinToString(" "))
                 }

@@ -39,6 +39,14 @@ class Group : AbstractModel<Group>() {
     )
     lateinit var groupName: String
 
+    @Column(
+        columnName = "kuerzel",
+        nullable = true,
+        dataType = ColumnDataType.VARCHAR,
+        size = 32
+    )
+    lateinit var kuerzel: String
+
     init {
         boot(this)
     }

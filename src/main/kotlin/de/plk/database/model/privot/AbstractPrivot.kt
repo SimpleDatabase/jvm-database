@@ -5,7 +5,7 @@ import de.plk.database.model.AbstractModel
 /**
  * Represents a name scope.
  */
-class AbstractPrivot : AbstractModel<AbstractPrivot>() {
+abstract class AbstractPrivot : AbstractModel<AbstractPrivot>() {
     override fun boot(model: AbstractPrivot) {
         TODO("Not yet implemented")
     }
