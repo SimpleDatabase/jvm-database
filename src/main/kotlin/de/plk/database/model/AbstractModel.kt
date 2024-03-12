@@ -7,9 +7,12 @@ import de.plk.database.model.meta.Column
 import de.plk.database.model.meta.MetaReader
 import de.plk.database.model.meta.Table
 import de.plk.database.model.migration.Blueprint
+import de.plk.database.model.privot.PivotModel
+import de.plk.database.model.relation.IndirectRelation
 import de.plk.database.model.relation.Relation
 import de.plk.database.model.relation.many.BelongsToMany
 import de.plk.database.model.relation.many.HasMany
+import de.plk.database.model.relation.many.ToPivot
 import de.plk.database.model.relation.one.BelongsTo
 import de.plk.database.model.relation.one.HasOne
 import de.plk.database.model.scope.GlobalScope
@@ -55,7 +58,7 @@ abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, ModelOpera
     /**
      * The relations of the model.
      */
-    private val relations = mutableListOf<Relation<M, out AbstractModel<*>>>()
+    val relations = mutableListOf<Relation<M, out AbstractModel<*>>>()
 
     /**
      * The scopes of the models.
@@ -161,7 +164,27 @@ abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, ModelOpera
      * {@inheritDoc}
      */
     override fun <O : AbstractModel<O>> belongsToMany(model: KClass<O>): BelongsToMany<M, O> {
-        return BelongsToMany(this.model, model.createInstance()).also {
+        val relatedModel = model.createInstance()
+        return BelongsToMany(
+            this.model,
+            relatedModel
+        ).also {
+            relations.add(it)
+        }
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    override fun <P : AbstractModel<P>, O : AbstractModel<O>> toPivot(model: KClass<O>, pivotModel: PivotModel<P, M, O>): ToPivot<P, M, O> {
+        val relatedModel = model.createInstance()
+        return ToPivot(
+            this.model,
+            this.model,
+            relatedModel,
+            pivotModel
+        ).also {
             relations.add(it)
         }
     }

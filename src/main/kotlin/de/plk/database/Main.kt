@@ -1,6 +1,7 @@
 package de.plk.database
 
 import de.plk.database.model.Group
+import de.plk.database.model.Member
 import java.util.*
 
 /**
@@ -9,6 +10,6 @@ import java.util.*
  * Copyright © 2024 | SoftwareBuilds | All rights reserved.
  */
 fun main() {
-    val member = Group()
+    val member = Member()
     member.getSchema().create()
 }

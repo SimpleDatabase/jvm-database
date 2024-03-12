@@ -4,8 +4,10 @@ import de.plk.database.model.AbstractModel
 import de.plk.database.model.meta.Column
 import de.plk.database.model.meta.MetaReader
 import de.plk.database.model.meta.Table
+import de.plk.database.model.relation.IndirectRelation
 import de.plk.database.model.relation.Relation
 import de.plk.database.model.relation.many.HasMany
+import de.plk.database.model.relation.many.ToPivot
 import de.plk.database.sql.command.Command
 import de.plk.database.sql.command.CommandClosure
 
@@ -34,7 +36,7 @@ class Blueprint<M : AbstractModel<M>, O : AbstractModel<O>>(
             val primaryColumn = MetaReader.readAllPropertyAnnotations(it.related::class, Column::class).first()
 
             when(it) {
-                is HasMany -> {
+                is HasMany, is ToPivot<*, *, *> -> {
                     relationLines = relationLines.plus(arrayOf(
                         primaryColumn.columnName,
                         primaryColumn.dataType.withSize(primaryColumn.size),
@@ -42,6 +44,10 @@ class Blueprint<M : AbstractModel<M>, O : AbstractModel<O>>(
                         relatedTableInformation.tableName,
                         "(${primaryColumn.columnName})"
                     ).joinToString(" "))
+
+                    if (it is ToPivot<*, *, *>) {
+                        it.pivotModel.getSchema().create()
+                    }
                 }
             }
         }

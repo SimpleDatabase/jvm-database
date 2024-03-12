@@ -6,6 +6,10 @@ import de.plk.database.model.meta.Column
 import de.plk.database.model.meta.ScopeBy
 import de.plk.database.model.meta.Table
 import de.plk.database.model.meta.type.ColumnDataType
+import de.plk.database.model.privot.MemberRankPivot
+import de.plk.database.model.privot.PivotModel
+import de.plk.database.model.relation.many.BelongsToMany
+import de.plk.database.model.relation.many.ToPivot
 import de.plk.database.model.relation.one.BelongsTo
 import de.plk.database.model.scope.NameScope
 import de.plk.database.sql.build.QueryBuilder
@@ -16,6 +20,11 @@ import java.util.UUID
  * @since 10.02.2024 01:42
  * Copyright © 2024 | SoftwareBuilds | All rights reserved.
  */
+
+object Test {
+    var created: Boolean = false
+}
+
 @ScopeBy(
     [NameScope::class]
 )
@@ -32,6 +41,11 @@ class Member : AbstractModel<Member>() {
 
     init {
         boot(this)
+
+        if (!Test.created) {
+            Test.created = true
+            ranks()
+        }
     }
 
 
@@ -55,5 +69,9 @@ class Member : AbstractModel<Member>() {
 
     fun group(): BelongsTo<Member, Group> {
         return belongsTo(Group::class)
+    }
+
+    fun ranks(): ToPivot<MemberRankPivot, Member, Rank> {
+        return toPivot(Rank::class, MemberRankPivot())
     }
 }

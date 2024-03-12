@@ -9,11 +9,9 @@ import de.plk.database.sql.build.QueryBuilder
 /**
  * Represents the belongs to many relation.
  */
-class BelongsToMany<M : AbstractModel<M>, O : AbstractModel<O>>(
-
-    /**
-     * The query builder of the base model.
-     */
+class ToPivot<P : AbstractModel<P>, M : AbstractModel<M>, O : AbstractModel<O>>(
     builder: QueryBuilder<M>,
-    related: O,
-) : DirectedRelation<M, O>(builder, related)
+    relatedM: M,
+    relatedO: O,
+    val pivotModel: PivotModel<P, M, O>
+) : IndirectRelation<P, M, O>(builder, relatedM, relatedO, pivotModel)
