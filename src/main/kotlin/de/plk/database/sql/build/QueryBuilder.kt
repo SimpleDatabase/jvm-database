@@ -3,11 +3,12 @@ package de.plk.database.sql.build
 import de.plk.database.model.AbstractModel
 import de.plk.database.sql.relation.BelongsBuilder
 import de.plk.database.sql.relation.HasBuilder
+import de.plk.database.sql.relation.PivotBuilder
 
 /**
  * Represents a sql-builder with the information from the model.
  */
-interface QueryBuilder<M : AbstractModel<M>> : BelongsBuilder<M>, HasBuilder<M> {
+interface QueryBuilder<M : AbstractModel<M>> : BelongsBuilder<M>, HasBuilder<M>, PivotBuilder<M> {
 
     /**
      * Add a condition to the sql-command.

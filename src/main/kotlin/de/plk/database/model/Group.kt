@@ -75,4 +75,5 @@ class Group : AbstractModel<Group>() {
     fun members(): HasMany<Group, Member> {
         return hasMany(Member::class)
     }
+
 }

@@ -1,7 +1,8 @@
 package de.plk.database.model.relation.one
 
 import de.plk.database.model.AbstractModel
-import de.plk.database.model.relation.Relation
+import de.plk.database.model.relation.DirectedRelation
+import de.plk.database.model.relation.IndirectRelation
 import de.plk.database.sql.build.QueryBuilder
 
 /**
@@ -14,4 +15,4 @@ class BelongsTo<M : AbstractModel<M>, O : AbstractModel<O>> (
      */
     builder: QueryBuilder<M>,
     related: O
-) : Relation<M, O>(builder, related)
+) : DirectedRelation<M, O>(builder, related)
