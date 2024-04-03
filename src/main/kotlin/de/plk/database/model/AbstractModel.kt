@@ -8,7 +8,6 @@ import de.plk.database.model.meta.MetaReader
 import de.plk.database.model.meta.Table
 import de.plk.database.model.migration.Blueprint
 import de.plk.database.model.privot.PivotModel
-import de.plk.database.model.relation.IndirectRelation
 import de.plk.database.model.relation.Relation
 import de.plk.database.model.relation.many.BelongsToMany
 import de.plk.database.model.relation.many.HasMany
@@ -65,8 +64,8 @@ abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, ModelOpera
      */
     private val wheres = mutableListOf<Where>()
 
-    fun <O : AbstractModel<O>> getSchema(): Blueprint<M, O> {
-        return Blueprint(table, columns, (relations as List<Relation<M, O>>))
+    fun <O : AbstractModel<O>> getSchema(): Blueprint<M> {
+        return Blueprint(this.model::class, table, columns)
     }
 
     /**

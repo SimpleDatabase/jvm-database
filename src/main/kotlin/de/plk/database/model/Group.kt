@@ -54,8 +54,6 @@ class Group : AbstractModel<Group>() {
     override fun boot(model: Group) {
         super.boot(model)
 
-        members()
-
         event(ModelEventType.SAVING, EventClosure<Group> {
             println("Element with ID (${it.groupId}) saving.")
 
@@ -70,10 +68,6 @@ class Group : AbstractModel<Group>() {
             println("Element with ID ($groupId) deleted.")
         })
 
-    }
-
-    fun members(): HasMany<Group, Member> {
-        return hasMany(Member::class)
     }
 
 }

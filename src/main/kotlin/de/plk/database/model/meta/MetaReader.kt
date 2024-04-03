@@ -33,7 +33,7 @@ object MetaReader {
      *
      * @return <A> The list of A annotations in a model class on properties.
      */
-    fun <A : Annotation, M : AbstractModel<M>> readAllPropertyAnnotations(
+    fun <A : Annotation, M : AbstractModel<*>> readAllPropertyAnnotations(
         modelClass: KClass<out M>, annotation: KClass<A>
     ): List<A> {
         return modelClass.memberProperties.filter {
@@ -51,7 +51,7 @@ object MetaReader {
      *
      * @return <A> The annotatios in a model class.
      */
-    fun <A : Annotation, M : AbstractModel<M>> readClassAnnotation(
+    fun <A : Annotation, M : AbstractModel<*>> readClassAnnotation(
         modelClass: KClass<out M>, annotation: KClass<A>
     ): A {
         return modelClass.findAnnotations(annotation).first()

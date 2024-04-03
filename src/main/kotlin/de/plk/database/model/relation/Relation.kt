@@ -1,7 +1,6 @@
 package de.plk.database.model.relation
 
 import de.plk.database.model.AbstractModel
-import de.plk.database.model.migration.Blueprint
 import de.plk.database.sql.build.QueryBuilder
 
 /**
