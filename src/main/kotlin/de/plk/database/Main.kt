@@ -2,6 +2,7 @@ package de.plk.database
 
 import de.plk.database.model.Group
 import de.plk.database.model.Member
+import de.plk.database.model.Rank
 import java.util.*
 
 /**
@@ -12,4 +13,5 @@ import java.util.*
 fun main() {
     val member = Member()
     member.getSchema().create()
+    Rank().getSchema().create()
 }

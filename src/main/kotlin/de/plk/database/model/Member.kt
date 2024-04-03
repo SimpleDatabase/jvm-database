@@ -3,6 +3,7 @@ package de.plk.database.model
 import de.plk.database.action.companion.ModelEventType
 import de.plk.database.model.event.EventClosure
 import de.plk.database.model.meta.Column
+import de.plk.database.model.meta.Relation
 import de.plk.database.model.meta.ScopeBy
 import de.plk.database.model.meta.Table
 import de.plk.database.model.meta.type.ColumnDataType
@@ -21,10 +22,6 @@ import java.util.UUID
  * Copyright © 2024 | SoftwareBuilds | All rights reserved.
  */
 
-object Test {
-    var created: Boolean = false
-}
-
 @ScopeBy(
     [NameScope::class]
 )
@@ -41,25 +38,13 @@ class Member : AbstractModel<Member>() {
 
     init {
         boot(this)
-
-        if (!Test.created) {
-            Test.created = true
-            ranks()
-        }
     }
-
-
-    lateinit var name: String
-
-
-    var age: Int = 0
 
     override fun boot(model: Member) {
         super.boot(model)
 
         event(ModelEventType.SAVING, EventClosure<Member> {
-            it.name = "test";
-            it.save()
+
         })
     }
 
@@ -67,11 +52,19 @@ class Member : AbstractModel<Member>() {
         where("age", 18, QueryBuilder.Operand.SMALLER)
     }
 
+    @Relation(
+        realtionType = BelongsTo::class,
+        relatedModel = Group::class
+    )
     fun group(): BelongsTo<Member, Group> {
         return belongsTo(Group::class)
     }
 
-    fun ranks(): ToPivot<MemberRankPivot, Member, Rank> {
+    @Relation(
+        realtionType = ToPivot::class,
+        relatedModel = MemberRankPivot::class
+    )
+    fun ranks(): ToPivot<MemberRankPivot<Member, Rank>, Member, Rank> {
         return toPivot(Rank::class, MemberRankPivot())
     }
 }

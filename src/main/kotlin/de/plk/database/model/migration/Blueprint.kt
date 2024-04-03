@@ -3,18 +3,23 @@ package de.plk.database.model.migration
 import de.plk.database.model.AbstractModel
 import de.plk.database.model.meta.Column
 import de.plk.database.model.meta.MetaReader
+import de.plk.database.model.meta.Relation
 import de.plk.database.model.meta.Table
-import de.plk.database.model.relation.IndirectRelation
-import de.plk.database.model.relation.Relation
-import de.plk.database.model.relation.many.HasMany
 import de.plk.database.model.relation.many.ToPivot
+import de.plk.database.model.relation.one.BelongsTo
 import de.plk.database.sql.command.Command
 import de.plk.database.sql.command.CommandClosure
+import kotlin.reflect.KClass
+import kotlin.reflect.full.createInstance
+import kotlin.reflect.full.findAnnotations
+import kotlin.reflect.full.memberFunctions
 
 /**
  * Represens the schema of the table.
  */
-class Blueprint<M : AbstractModel<M>, O : AbstractModel<O>>(
+class Blueprint<M : AbstractModel<M>>(
+
+    val clazz: KClass<out M>,
 
     /**
      * The table information of table.
@@ -24,19 +29,33 @@ class Blueprint<M : AbstractModel<M>, O : AbstractModel<O>>(
     /**
      * The column information of table.
      */
-    val columns: List<Column>,
-
-    val relations: List<Relation<M, O>>
+    val columns: List<Column>
 ) {
 
-    private fun addRelations(): Array<String> {
-        var relationLines = arrayOf<String>()
-        relations.forEach {
-            val relatedTableInformation = MetaReader.readClassAnnotation(it.related::class, Table::class)
-            val primaryColumn = MetaReader.readAllPropertyAnnotations(it.related::class, Column::class).first()
+    private var relationLines = arrayOf<String>()
 
-            when(it) {
-                is HasMany, is ToPivot<*, *, *> -> {
+    fun addRelations(): Array<String> {
+        if (relationLines.isNotEmpty()) return relationLines
+
+        val relations = clazz.memberFunctions.filter {
+            it.findAnnotations(Relation::class).isNotEmpty()
+        }.map {
+            it.findAnnotations(Relation::class).first()
+        }
+
+        relations.forEach {
+            val relatedTableInformation = MetaReader.readClassAnnotation(it.relatedModel, Table::class)
+            var primaryColumn = MetaReader.readAllPropertyAnnotations(it.relatedModel, Column::class).first()
+
+            if (it.realtionType == ToPivot::class) {
+                primaryColumn = MetaReader.readAllPropertyAnnotations(it.relatedModel, Column::class).filter {
+                    it.columnName.equals(columns.find {
+                        it.primary
+                    }!!.columnName)
+                }.first()
+            }
+
+            if (it.realtionType == BelongsTo::class || it.realtionType == ToPivot::class) {
                     relationLines = relationLines.plus(arrayOf(
                         primaryColumn.columnName,
                         primaryColumn.dataType.withSize(primaryColumn.size),
@@ -44,11 +63,10 @@ class Blueprint<M : AbstractModel<M>, O : AbstractModel<O>>(
                         relatedTableInformation.tableName,
                         "(${primaryColumn.columnName})"
                     ).joinToString(" "))
+            }
 
-                    if (it is ToPivot<*, *, *>) {
-                        it.pivotModel.getSchema().create()
-                    }
-                }
+            if (it.realtionType == ToPivot::class) {
+                it.relatedModel.createInstance().getSchema().create()
             }
         }
 
