@@ -5,12 +5,10 @@ import de.plk.database.model.meta.Column
 import de.plk.database.model.meta.MetaReader
 import de.plk.database.model.meta.Relation
 import de.plk.database.model.meta.Table
-import de.plk.database.model.relation.many.ToPivot
 import de.plk.database.model.relation.one.BelongsTo
 import de.plk.database.sql.command.Command
 import de.plk.database.sql.command.CommandClosure
 import kotlin.reflect.KClass
-import kotlin.reflect.full.createInstance
 import kotlin.reflect.full.findAnnotations
 import kotlin.reflect.full.memberFunctions
 
@@ -47,15 +45,7 @@ class Blueprint<M : AbstractModel<M>>(
             val relatedTableInformation = MetaReader.readClassAnnotation(it.relatedModel, Table::class)
             var primaryColumn = MetaReader.readAllPropertyAnnotations(it.relatedModel, Column::class).first()
 
-            if (it.realtionType == ToPivot::class) {
-                primaryColumn = MetaReader.readAllPropertyAnnotations(it.relatedModel, Column::class).filter {
-                    it.columnName.equals(columns.find {
-                        it.primary
-                    }!!.columnName)
-                }.first()
-            }
-
-            if (it.realtionType == BelongsTo::class || it.realtionType == ToPivot::class) {
+            if (it.realtionType == BelongsTo::class) {
                     relationLines = relationLines.plus(arrayOf(
                         "fk_${primaryColumn.columnName}",
                         primaryColumn.dataType.withSize(primaryColumn.size),
