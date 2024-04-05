@@ -19,7 +19,7 @@ import java.util.UUID
     [NameScope::class]
 )
 @Table("ranks")
-class Rank : AbstractModel<Rank>() {
+class Rank(model: Rank = Rank()) : AbstractModel<Rank>() {
 
     @Column(
         columnName = "rankId",

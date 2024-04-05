@@ -18,5 +18,5 @@ fun main() {
     AbstractModel.getSchema(Rank::class).create()
     AbstractModel.getSchema(Group::class).create()
 
-    Member("Tim").save()
+    Member().save()
 }

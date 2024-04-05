@@ -21,9 +21,11 @@ import java.util.UUID
     [NameScope::class]
 )
 @Table("members")
-class Member(
-    name: String
-) : AbstractModel<Member>() {
+class Member() : AbstractModel<Member>() {
+
+    constructor(name: String): this() {
+        this.name = name
+    }
 
     @Column(
         columnName = "memberId",
@@ -38,7 +40,7 @@ class Member(
         dataType = ColumnDataType.VARCHAR,
         size = 255
     )
-    val name: String = name
+    var name: String = ""
 
     init {
         boot(this)
