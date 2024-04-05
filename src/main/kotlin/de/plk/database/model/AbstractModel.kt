@@ -22,7 +22,7 @@ import kotlin.reflect.full.createInstance
 /**
  * Defines that any subclass is a database model.
  */
-abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, ModelOperation {
+open abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, ModelOperation {
 
     lateinit var model: M
 
