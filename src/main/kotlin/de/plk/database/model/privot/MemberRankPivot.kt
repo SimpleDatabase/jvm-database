@@ -49,4 +49,5 @@ class MemberRankPivot : AbstractModel<MemberRankPivot>() {
     fun ranks(): BelongsToMany<MemberRankPivot, Rank> {
         return belongsToMany(Rank::class)
     }
+
 }

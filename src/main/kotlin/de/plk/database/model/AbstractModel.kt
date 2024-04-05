@@ -24,6 +24,9 @@ import kotlin.reflect.full.createInstance
  */
 open abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, ModelOperation {
 
+    /**
+     * The sub model instance.
+     */
     lateinit var model: M
 
     /**
