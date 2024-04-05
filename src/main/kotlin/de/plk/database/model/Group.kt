@@ -1,13 +1,11 @@
 package de.plk.database.model
 
 import de.plk.database.action.companion.ModelEventType
-import de.plk.database.model.event.EventClosure
 import de.plk.database.model.meta.Column
 import de.plk.database.model.meta.MetaReader
 import de.plk.database.model.meta.ScopeBy
 import de.plk.database.model.meta.Table
 import de.plk.database.model.meta.type.ColumnDataType
-import de.plk.database.model.relation.many.HasMany
 import de.plk.database.model.scope.NameScope
 import java.util.UUID
 
@@ -54,17 +52,17 @@ class Group : AbstractModel<Group>() {
     override fun boot(model: Group) {
         super.boot(model)
 
-        event(ModelEventType.SAVING, EventClosure<Group> {
+        event(ModelEventType.SAVING, {
             println("Element with ID (${it.groupId}) saving.")
 
             println("Value of groupId ${MetaReader.readValue(this, "groupId")}")
         })
 
-        event(ModelEventType.UPDATING, EventClosure<Group> {
+        event(ModelEventType.UPDATING, {
             println("Element with ID (${it.groupId}) updated.")
         })
 
-        event(ModelEventType.DELETED, EventClosure<Group> {
+        event(ModelEventType.DELETED, {
             println("Element with ID ($groupId) deleted.")
         })
 

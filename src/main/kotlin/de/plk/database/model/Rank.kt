@@ -14,7 +14,11 @@ import java.util.UUID
  * Copyright © 2024 | SoftwareBuilds | All rights reserved.
  */
 @Table("ranks")
-class Rank(model: Rank = Rank()) : AbstractModel<Rank>() {
+class Rank() : AbstractModel<Rank>() {
+
+    constructor(name: String): this() {
+        this.name = name
+    }
 
     @Column(
         columnName = "rankId",
@@ -23,6 +27,13 @@ class Rank(model: Rank = Rank()) : AbstractModel<Rank>() {
         size = 16
     )
     val rankId: UUID = UUID.randomUUID()
+
+    @Column(
+        columnName = "name",
+        dataType = ColumnDataType.VARCHAR,
+        size = 255
+    )
+    var name: String = ""
 
     init {
         boot(this)

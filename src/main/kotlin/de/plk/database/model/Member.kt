@@ -1,7 +1,6 @@
 package de.plk.database.model
 
 import de.plk.database.action.companion.ModelEventType
-import de.plk.database.model.event.EventClosure
 import de.plk.database.model.meta.*
 import de.plk.database.model.meta.type.ColumnDataType
 import de.plk.database.model.privot.MemberRankPivot
@@ -49,9 +48,18 @@ class Member() : AbstractModel<Member>() {
     override fun boot(model: Member) {
         super.boot(model)
 
-        event(ModelEventType.SAVING, EventClosure<Member> {
-            println(MetaReader.readValue(this, "memberId"))
-            println(MetaReader.readValue(this, "name"))
+        event(ModelEventType.SAVING, {
+            println("SAVING memberId: " + it.memberId)
+            println("SAVING name: " + it.name)
+
+            it.name = "TEST"
+
+            it.save()
+        })
+
+        event(ModelEventType.UPDATED, {
+            println("UPDATING memberId: " + it.memberId)
+            println("UPDATING name: " + it.name)
         })
     }
 
