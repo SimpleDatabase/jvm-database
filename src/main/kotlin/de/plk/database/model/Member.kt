@@ -75,5 +75,4 @@ class Member() : AbstractModel<Member>() {
         return belongsToMany(MemberRankPivot::class)
     }
 
-
 }
