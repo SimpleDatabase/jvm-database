@@ -1,5 +1,6 @@
 package de.plk.database.model.privot
 
+import de.plk.database.action.companion.ModelEventType
 import de.plk.database.model.AbstractModel
 import de.plk.database.model.Member
 import de.plk.database.model.Rank
@@ -14,24 +15,38 @@ import java.util.UUID
  * Defines that any subclass is a database model.
  */
 @Table(tableName = "member__rank")
-class MemberRankPivot : AbstractModel<MemberRankPivot>() {
+class MemberRankPivot() : AbstractModel<MemberRankPivot>() {
+
+    constructor(
+        rankId: UUID,
+        memberId: UUID
+    ) : this() {
+        this.rankId = rankId
+        this.memberId = memberId
+    }
 
     @Column(
         columnName = "rankId",
         dataType = ColumnDataType.VARCHAR,
         size = 16
     )
-    lateinit var rankId: UUID
+    var rankId: UUID? = null
 
     @Column(
         columnName = "memberId",
         dataType = ColumnDataType.VARCHAR,
         size = 16
     )
-    lateinit var memberId: UUID
+    var memberId: UUID? = null
 
     init {
         boot(this)
+
+        event(ModelEventType.SAVING, {
+            println("SAVING memberId: " + it.memberId)
+            println("SAVING rankId: " + it.rankId)
+        })
+
     }
 
     @Relation(

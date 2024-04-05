@@ -5,7 +5,6 @@ import de.plk.database.model.Group
 import de.plk.database.model.Member
 import de.plk.database.model.Rank
 import de.plk.database.model.privot.MemberRankPivot
-import java.util.*
 
 /**
  * @author SoftwareBuilds
@@ -18,5 +17,10 @@ fun main() {
     AbstractModel.getSchema(Rank::class).create()
     AbstractModel.getSchema(Group::class).create()
 
-    Member().save()
+    val model = Member()
+
+    model.name = "test"
+
+    model.save()
+
 }
