@@ -57,16 +57,12 @@ class Blueprint<M : AbstractModel<M>>(
 
             if (it.realtionType == BelongsTo::class || it.realtionType == ToPivot::class) {
                     relationLines = relationLines.plus(arrayOf(
-                        primaryColumn.columnName,
+                        "fk_${primaryColumn.columnName}",
                         primaryColumn.dataType.withSize(primaryColumn.size),
                         "FOREIGN KEY REFERENCES",
                         relatedTableInformation.tableName,
                         "(${primaryColumn.columnName})"
                     ).joinToString(" "))
-            }
-
-            if (it.realtionType == ToPivot::class) {
-                it.relatedModel.createInstance().getSchema().create()
             }
         }
 

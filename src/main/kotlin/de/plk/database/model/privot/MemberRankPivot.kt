@@ -19,7 +19,7 @@ import kotlin.reflect.KClass
  * Defines that any subclass is a database model.
  */
 @Table(tableName = "member__rank")
-class MemberRankPivot<M : AbstractModel<M>, N : AbstractModel<N>> : PivotModel<MemberRankPivot<M, N>, M, N>() {
+class MemberRankPivot : AbstractModel<MemberRankPivot>() {
 
     @Column(
         columnName = "rankId",
@@ -39,7 +39,19 @@ class MemberRankPivot<M : AbstractModel<M>, N : AbstractModel<N>> : PivotModel<M
         boot(this)
     }
 
-    fun members(): HasMany<MemberRankPivot<M, N>, Member> {
-        return hasMany(Member::class)
+    @Relation(
+        relatedModel = Member::class,
+        realtionType = BelongsToMany::class
+    )
+    fun members(): BelongsToMany<MemberRankPivot, Member> {
+        return belongsToMany(Member::class)
+    }
+
+    @Relation(
+        relatedModel = Rank::class,
+        realtionType = BelongsToMany::class
+    )
+    fun ranks(): BelongsToMany<MemberRankPivot, Rank> {
+        return belongsToMany(Rank::class)
     }
 }
