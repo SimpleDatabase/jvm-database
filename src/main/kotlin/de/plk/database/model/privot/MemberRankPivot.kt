@@ -1,7 +1,6 @@
 package de.plk.database.model.privot
 
 import de.plk.database.model.AbstractModel
-import de.plk.database.model.Group
 import de.plk.database.model.Member
 import de.plk.database.model.Rank
 import de.plk.database.model.meta.Column
@@ -9,11 +8,7 @@ import de.plk.database.model.meta.Relation
 import de.plk.database.model.meta.Table
 import de.plk.database.model.meta.type.ColumnDataType
 import de.plk.database.model.relation.many.BelongsToMany
-import de.plk.database.model.relation.many.HasMany
-import de.plk.database.model.relation.many.ToPivot
-import de.plk.database.model.relation.one.BelongsTo
 import java.util.UUID
-import kotlin.reflect.KClass
 
 /**
  * Defines that any subclass is a database model.

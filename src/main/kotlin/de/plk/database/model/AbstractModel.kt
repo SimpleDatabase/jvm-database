@@ -7,11 +7,8 @@ import de.plk.database.model.meta.Column
 import de.plk.database.model.meta.MetaReader
 import de.plk.database.model.meta.Table
 import de.plk.database.model.migration.Blueprint
-import de.plk.database.model.privot.PivotModel
-import de.plk.database.model.relation.Relation
 import de.plk.database.model.relation.many.BelongsToMany
 import de.plk.database.model.relation.many.HasMany
-import de.plk.database.model.relation.many.ToPivot
 import de.plk.database.model.relation.one.BelongsTo
 import de.plk.database.model.relation.one.HasOne
 import de.plk.database.model.scope.GlobalScope
@@ -53,11 +50,6 @@ abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, ModelOpera
      * The columns information of the model.
      */
     protected lateinit var columns: List<Column>
-
-    /**
-     * The relations of the model.
-     */
-    val relations = mutableListOf<Relation<M, out AbstractModel<*>>>()
 
     /**
      * The scopes of the models.
@@ -163,52 +155,28 @@ abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, ModelOpera
         return BelongsToMany(
             this.model,
             relatedModel
-        ).also {
-            relations.add(it)
-        }
-    }
-
-
-    /**
-     * {@inheritDoc}
-     */
-    override fun <P : AbstractModel<P>, O : AbstractModel<O>> toPivot(model: KClass<O>, pivotModel: PivotModel<P, M, O>): ToPivot<P, M, O> {
-        val relatedModel = model.createInstance()
-        return ToPivot(
-            this.model,
-            this.model,
-            relatedModel,
-            pivotModel
-        ).also {
-            relations.add(it)
-        }
+        )
     }
 
     /**
      * {@inheritDoc}
      */
     override fun <O : AbstractModel<O>> belongsTo(model: KClass<O>): BelongsTo<M, O> {
-        return BelongsTo(this.model, model.createInstance()).also {
-            relations.add(it)
-        }
+        return BelongsTo(this.model, model.createInstance())
     }
 
     /**
      * {@inheritDoc}
      */
     override fun <O : AbstractModel<O>> hasMany(model: KClass<O>): HasMany<M, O> {
-        return HasMany(this.model, model.createInstance()).also {
-            relations.add(it)
-        }
+        return HasMany(this.model, model.createInstance())
     }
 
     /**
      * {@inheritDoc}
      */
     override fun <O : AbstractModel<O>> hasOne(model: KClass<O>): HasOne<M, O> {
-        return HasOne(this.model, model.createInstance()).also {
-            relations.add(it)
-        }
+        return HasOne(this.model, model.createInstance())
     }
 
     companion object {

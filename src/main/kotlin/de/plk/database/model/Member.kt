@@ -5,9 +5,7 @@ import de.plk.database.model.event.EventClosure
 import de.plk.database.model.meta.*
 import de.plk.database.model.meta.type.ColumnDataType
 import de.plk.database.model.privot.MemberRankPivot
-import de.plk.database.model.privot.PivotModel
 import de.plk.database.model.relation.many.BelongsToMany
-import de.plk.database.model.relation.many.ToPivot
 import de.plk.database.model.relation.one.BelongsTo
 import de.plk.database.model.scope.NameScope
 import de.plk.database.sql.build.QueryBuilder
