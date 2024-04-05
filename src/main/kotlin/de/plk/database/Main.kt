@@ -1,8 +1,10 @@
 package de.plk.database
 
+import de.plk.database.model.AbstractModel
 import de.plk.database.model.Group
 import de.plk.database.model.Member
 import de.plk.database.model.Rank
+import de.plk.database.model.privot.MemberRankPivot
 import java.util.*
 
 /**
@@ -11,7 +13,10 @@ import java.util.*
  * Copyright © 2024 | SoftwareBuilds | All rights reserved.
  */
 fun main() {
-    val member = Member()
-    member.getSchema().create()
-    Rank().getSchema().create()
+    AbstractModel.getSchema(Member::class).create()
+    AbstractModel.getSchema(MemberRankPivot::class).create()
+    AbstractModel.getSchema(Rank::class).create()
+    AbstractModel.getSchema(Group::class).create()
+
+    Member("Tim").save()
 }

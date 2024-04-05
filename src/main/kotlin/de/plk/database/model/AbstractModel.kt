@@ -64,10 +64,6 @@ abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, ModelOpera
      */
     private val wheres = mutableListOf<Where>()
 
-    fun <O : AbstractModel<O>> getSchema(): Blueprint<M> {
-        return Blueprint(this.model::class, table, columns)
-    }
-
     /**
      * The boot function of model.
      */
@@ -212,6 +208,14 @@ abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, ModelOpera
     override fun <O : AbstractModel<O>> hasOne(model: KClass<O>): HasOne<M, O> {
         return HasOne(this.model, model.createInstance()).also {
             relations.add(it)
+        }
+    }
+
+    companion object {
+        fun <O : AbstractModel<O>> getSchema(model: KClass<O>): Blueprint<O> {
+            val table = MetaReader.readClassAnnotation(model, Table::class)
+            val columns = MetaReader.readAllPropertyAnnotations(model, Column::class)
+            return Blueprint(model, table, columns)
         }
     }
 

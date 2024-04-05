@@ -2,10 +2,7 @@ package de.plk.database.model
 
 import de.plk.database.action.companion.ModelEventType
 import de.plk.database.model.event.EventClosure
-import de.plk.database.model.meta.Column
-import de.plk.database.model.meta.Relation
-import de.plk.database.model.meta.ScopeBy
-import de.plk.database.model.meta.Table
+import de.plk.database.model.meta.*
 import de.plk.database.model.meta.type.ColumnDataType
 import de.plk.database.model.privot.MemberRankPivot
 import de.plk.database.model.privot.PivotModel
@@ -26,7 +23,9 @@ import java.util.UUID
     [NameScope::class]
 )
 @Table("members")
-class Member : AbstractModel<Member>() {
+class Member(
+    name: String
+) : AbstractModel<Member>() {
 
     @Column(
         columnName = "memberId",
@@ -36,6 +35,13 @@ class Member : AbstractModel<Member>() {
     )
     val memberId: UUID = UUID.randomUUID()
 
+    @Column(
+        columnName = "name",
+        dataType = ColumnDataType.VARCHAR,
+        size = 255
+    )
+    val name: String = name
+
     init {
         boot(this)
     }
@@ -44,7 +50,8 @@ class Member : AbstractModel<Member>() {
         super.boot(model)
 
         event(ModelEventType.SAVING, EventClosure<Member> {
-
+            println(MetaReader.readValue(this, "memberId"))
+            println(MetaReader.readValue(this, "name"))
         })
     }
 
@@ -61,10 +68,12 @@ class Member : AbstractModel<Member>() {
     }
 
     @Relation(
-        realtionType = ToPivot::class,
+        realtionType = BelongsToMany::class,
         relatedModel = MemberRankPivot::class
     )
-    fun ranks(): ToPivot<MemberRankPivot<Member, Rank>, Member, Rank> {
-        return toPivot(Rank::class, MemberRankPivot())
+    fun ranks(): BelongsToMany<Member, MemberRankPivot> {
+        return belongsToMany(MemberRankPivot::class)
     }
+
+
 }
