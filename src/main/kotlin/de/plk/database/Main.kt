@@ -17,7 +17,7 @@ fun main() {
     AbstractModel.getSchema(Rank::class).create()
     AbstractModel.getSchema(MemberRankPivot::class).create()
 
-    val model = Member()
+    val model = Member(1)
 
     model.name = "test"
 

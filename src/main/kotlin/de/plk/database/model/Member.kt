@@ -20,26 +20,25 @@ import java.util.UUID
     [NameScope::class]
 )
 @Table("members")
-class Member() : AbstractModel<Member>() {
-
-    constructor(name: String): this() {
-        this.name = name
-    }
-
+class Member(
     @Column(
         columnName = "memberId",
         primary = true,
-        dataType = ColumnDataType.VARCHAR,
-        size = 16
-    )
-    val memberId: UUID = UUID.randomUUID()
+        nullable = false,
+        dataType = ColumnDataType.INT
+    ) val memberId: Int
+) : AbstractModel<Member>() {
+
+    constructor(memberId: Int, name: String): this(memberId) {
+        this.name = name
+    }
 
     @Column(
         columnName = "name",
         dataType = ColumnDataType.VARCHAR,
         size = 255
     )
-    var name: String = ""
+    var name: String? = null
 
     init {
         boot(this)

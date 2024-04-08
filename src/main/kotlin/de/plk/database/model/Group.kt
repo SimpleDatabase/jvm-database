@@ -7,7 +7,6 @@ import de.plk.database.model.meta.ScopeBy
 import de.plk.database.model.meta.Table
 import de.plk.database.model.meta.type.ColumnDataType
 import de.plk.database.model.scope.NameScope
-import java.util.UUID
 
 /**
  * @author SoftwareBuilds
@@ -18,20 +17,18 @@ import java.util.UUID
     [NameScope::class]
 )
 @Table("groups")
-class Group() : AbstractModel<Group>() {
-
-    constructor(groupName: String): this() {
-        this.groupName = groupName
-    }
-
+class Group(
     @Column(
         columnName = "groupId",
         primary = true,
         nullable = false,
-        dataType = ColumnDataType.VARCHAR,
-        size = 16
-    )
-    val groupId: UUID = UUID.randomUUID()
+        dataType = ColumnDataType.INT
+    ) val groupId: Int
+) : AbstractModel<Group>() {
+
+    constructor(groupId: Int, groupName: String): this(groupId) {
+        this.groupName = groupName
+    }
 
     @Column(
         columnName = "groupName",
@@ -39,7 +36,7 @@ class Group() : AbstractModel<Group>() {
         dataType = ColumnDataType.VARCHAR,
         size = 255
     )
-    lateinit var groupName: String
+    var groupName: String? = null
 
     @Column(
         columnName = "kuerzel",
@@ -47,7 +44,7 @@ class Group() : AbstractModel<Group>() {
         dataType = ColumnDataType.VARCHAR,
         size = 32
     )
-    lateinit var kuerzel: String
+    var kuerzel: String? = null
 
     init {
         boot(this)

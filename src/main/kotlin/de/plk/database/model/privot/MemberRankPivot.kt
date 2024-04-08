@@ -16,23 +16,23 @@ import java.util.UUID
  * Defines that any subclass is a database model.
  */
 @Table(tableName = "member__rank")
-class MemberRankPivot() : AbstractModel<MemberRankPivot>() {
-
-    constructor(
-        rankId: UUID,
-        memberId: UUID
-    ) : this() {
-        this.rankId = rankId
-        this.memberId = memberId
-    }
-
+class MemberRankPivot(
     @Column(
         columnName = "pivotId",
         primary = true,
-        dataType = ColumnDataType.VARCHAR,
-        size = 16
-    )
-    var pivotId: UUID? = null
+        nullable = false,
+        dataType = ColumnDataType.INT,
+    ) val pivotId: Int
+) : AbstractModel<MemberRankPivot>() {
+
+    constructor(
+        pivotId: Int,
+        rankId: UUID,
+        memberId: UUID
+    ) : this(pivotId) {
+        this.rankId = rankId
+        this.memberId = memberId
+    }
 
     @Column(
         columnName = "rankId",
