@@ -13,5 +13,8 @@ open class Relation<M : AbstractModel<M>, O : AbstractModel<O>>(
      */
     val builder: QueryBuilder<M>,
 
+    /**
+     * The related model.
+     */
     val related: O
 )

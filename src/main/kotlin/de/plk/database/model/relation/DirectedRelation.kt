@@ -13,5 +13,8 @@ open class DirectedRelation<M : AbstractModel<M>, O : AbstractModel<O>>(
      */
     builder: QueryBuilder<M>,
 
+    /**
+     * The related model.
+     */
     related: O
 ) : Relation<M, O>(builder, related)
