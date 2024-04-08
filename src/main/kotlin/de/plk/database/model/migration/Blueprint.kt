@@ -48,6 +48,13 @@ class Blueprint<M : AbstractModel<M>>(
                 it.primary
             }.first()
 
+            if (it.relationType == BelongsTo::class) {
+                relationLines = relationLines.plus(arrayOf(
+                    primaryColumn.columnName,
+                    primaryColumn.dataType.withSize(primaryColumn.size)
+                ).joinToString(" "))
+            }
+
             if (it.relationType == BelongsTo::class || (it.relationType == BelongsToMany::class && !it.pivot)) {
                 relationLines = relationLines.plus(arrayOf(
                     "CONSTRAINT",

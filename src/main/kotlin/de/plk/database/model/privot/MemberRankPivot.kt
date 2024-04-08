@@ -36,15 +36,13 @@ class MemberRankPivot(
 
     @Column(
         columnName = "rankId",
-        dataType = ColumnDataType.VARCHAR,
-        size = 16
+        dataType = ColumnDataType.INT,
     )
     var rankId: UUID? = null
 
     @Column(
         columnName = "memberId",
-        dataType = ColumnDataType.VARCHAR,
-        size = 16
+        dataType = ColumnDataType.INT,
     )
     var memberId: UUID? = null
 
