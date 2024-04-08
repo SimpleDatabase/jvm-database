@@ -26,7 +26,6 @@ class MemberRankPivot() : AbstractModel<MemberRankPivot>() {
         this.memberId = memberId
     }
 
-
     @Column(
         columnName = "pivotId",
         primary = true,
