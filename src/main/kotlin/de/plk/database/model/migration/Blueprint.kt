@@ -5,6 +5,7 @@ import de.plk.database.model.meta.Column
 import de.plk.database.model.meta.MetaReader
 import de.plk.database.model.meta.Relation
 import de.plk.database.model.meta.Table
+import de.plk.database.model.relation.many.BelongsToMany
 import de.plk.database.model.relation.one.BelongsTo
 import de.plk.database.sql.command.Command
 import de.plk.database.sql.command.CommandClosure
@@ -27,7 +28,7 @@ class Blueprint<M : AbstractModel<M>>(
     /**
      * The column information of table.
      */
-    val columns: List<Column>
+    var columns: List<Column>
 ) {
 
     private var relationLines = arrayOf<String>()
@@ -43,13 +44,15 @@ class Blueprint<M : AbstractModel<M>>(
 
         relations.forEach {
             val relatedTableInformation = MetaReader.readClassAnnotation(it.relatedModel, Table::class)
-            var primaryColumn = MetaReader.readAllPropertyAnnotations(it.relatedModel, Column::class).first()
+            var primaryColumn = MetaReader.readAllPropertyAnnotations(it.relatedModel, Column::class).filter {
+                it.primary
+            }.first()
 
-            if (it.realtionType == BelongsTo::class) {
+            if (it.relationType == BelongsTo::class || (it.relationType == BelongsToMany::class && !it.pivot)) {
                     relationLines = relationLines.plus(arrayOf(
+                        "CONSTRAINT",
                         "fk_${primaryColumn.columnName}",
-                        primaryColumn.dataType.withSize(primaryColumn.size),
-                        "FOREIGN KEY REFERENCES",
+                        "FOREIGN KEY (${primaryColumn.columnName}) REFERENCES",
                         relatedTableInformation.tableName,
                         "(${primaryColumn.columnName})"
                     ).joinToString(" "))
@@ -66,6 +69,8 @@ class Blueprint<M : AbstractModel<M>>(
         Command.execute(Command.CREATE, CommandClosure {
             if (columns.isEmpty())
                 throw RuntimeException("Es muss mindestens eine Spalte angeben werden!")
+
+            columns = columns.sortedByDescending { it.primary }
 
             var columnAttributes = arrayOf<String>()
 

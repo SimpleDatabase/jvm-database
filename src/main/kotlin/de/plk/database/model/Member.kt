@@ -68,16 +68,18 @@ class Member() : AbstractModel<Member>() {
     }
 
     @Relation(
-        realtionType = BelongsTo::class,
-        relatedModel = Group::class
+        relationType = BelongsTo::class,
+        relatedModel = Group::class,
+        pivot = true
     )
     fun group(): BelongsTo<Member, Group> {
         return belongsTo(Group::class)
     }
 
     @Relation(
-        realtionType = BelongsToMany::class,
-        relatedModel = MemberRankPivot::class
+        relationType = BelongsToMany::class,
+        relatedModel = MemberRankPivot::class,
+        pivot = true
     )
     fun ranks(): BelongsToMany<Member, MemberRankPivot> {
         return belongsToMany(MemberRankPivot::class)

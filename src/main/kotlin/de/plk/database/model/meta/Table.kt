@@ -16,4 +16,5 @@ annotation class Table(
      * @return The name of the table.
      */
     val tableName: String
+
 )

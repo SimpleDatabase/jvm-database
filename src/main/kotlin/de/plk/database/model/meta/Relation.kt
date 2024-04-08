@@ -13,8 +13,10 @@ import kotlin.reflect.KClass
 @Retention(AnnotationRetention.RUNTIME)
 annotation class Relation(
 
-    val realtionType: KClass<out Relation<*, *>> = BelongsTo::class,
+    val relationType: KClass<out Relation<*, *>> = BelongsTo::class,
 
-    val relatedModel: KClass<out AbstractModel<*>>
+    val relatedModel: KClass<out AbstractModel<*>>,
+
+    val pivot: Boolean = false
 
 )
