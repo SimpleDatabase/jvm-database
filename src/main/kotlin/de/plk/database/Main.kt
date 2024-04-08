@@ -19,7 +19,7 @@ fun main() {
 
     val model = Member(1)
 
-    model.name = "test"
+    model.name = "Phil"
 
     model.save()
 
