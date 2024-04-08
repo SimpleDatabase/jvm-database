@@ -1,21 +1,15 @@
 package de.plk.database.model
 
 import de.plk.database.action.companion.ModelEventType
-import de.plk.database.model.meta.Column
-import de.plk.database.model.meta.MetaReader
-import de.plk.database.model.meta.ScopeBy
-import de.plk.database.model.meta.Table
+import de.plk.database.model.meta.*
 import de.plk.database.model.meta.type.ColumnDataType
-import de.plk.database.model.scope.NameScope
+import de.plk.database.model.relation.one.HasOne
 
 /**
  * @author SoftwareBuilds
  * @since 10.02.2024 01:42
  * Copyright © 2024 | SoftwareBuilds | All rights reserved.
  */
-@ScopeBy(
-    [NameScope::class]
-)
 @Table("groups")
 class Group(
     @Column(
@@ -67,6 +61,14 @@ class Group(
             println("Element with ID ($groupId) deleted.")
         })
 
+    }
+
+    @Relation(
+        relationType = HasOne::class,
+        relatedModel = Member::class,
+    )
+    fun member(): HasOne<Group, Member> {
+        return hasOne(Member::class)
     }
 
 }

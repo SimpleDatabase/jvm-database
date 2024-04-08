@@ -18,9 +18,6 @@ fun main() {
     AbstractModel.getSchema(MemberRankPivot::class).create()
 
     val model = Member(1)
-
     model.name = "Phil"
-
     model.save()
-
 }
