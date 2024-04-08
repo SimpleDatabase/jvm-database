@@ -6,7 +6,6 @@ import de.plk.database.model.meta.Table
 import de.plk.database.model.meta.type.ColumnDataType
 import de.plk.database.model.privot.MemberRankPivot
 import de.plk.database.model.relation.many.BelongsToMany
-import java.util.UUID
 
 /**
  * @author SoftwareBuilds
@@ -14,26 +13,25 @@ import java.util.UUID
  * Copyright © 2024 | SoftwareBuilds | All rights reserved.
  */
 @Table("ranks")
-class Rank() : AbstractModel<Rank>() {
-
-    constructor(name: String): this() {
-        this.name = name
-    }
-
+class Rank(
     @Column(
         columnName = "rankId",
         primary = true,
-        dataType = ColumnDataType.VARCHAR,
-        size = 16
-    )
-    val rankId: UUID = UUID.randomUUID()
+        nullable = false,
+        dataType = ColumnDataType.INT,
+    ) val rankId: Int
+) : AbstractModel<Rank>() {
+
+    constructor(rankId: Int, name: String): this(rankId) {
+        this.name = name
+    }
 
     @Column(
         columnName = "name",
         dataType = ColumnDataType.VARCHAR,
         size = 255
     )
-    var name: String = ""
+    var name: String? = null
 
     init {
         boot(this)

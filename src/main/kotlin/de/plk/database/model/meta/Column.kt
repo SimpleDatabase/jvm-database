@@ -6,7 +6,7 @@ import de.plk.database.model.meta.type.ColumnDataType
  * Represents that the field with annotation
  * is a column in the table of the model.
  */
-@Target(AnnotationTarget.PROPERTY, AnnotationTarget.VALUE_PARAMETER)
+@Target(AnnotationTarget.PROPERTY)
 @Retention(AnnotationRetention.RUNTIME)
 annotation class Column(
 
