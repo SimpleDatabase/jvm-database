@@ -18,7 +18,11 @@ import java.util.UUID
     [NameScope::class]
 )
 @Table("groups")
-class Group : AbstractModel<Group>() {
+class Group() : AbstractModel<Group>() {
+
+    constructor(groupName: String): this() {
+        this.groupName = groupName
+    }
 
     @Column(
         columnName = "groupId",

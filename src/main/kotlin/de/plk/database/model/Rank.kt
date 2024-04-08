@@ -40,8 +40,9 @@ class Rank() : AbstractModel<Rank>() {
     }
 
     @Relation(
-        realtionType = BelongsToMany::class,
-        relatedModel = MemberRankPivot::class
+        relationType = BelongsToMany::class,
+        relatedModel = MemberRankPivot::class,
+        pivot = true
     )
     fun members(): BelongsToMany<Rank, MemberRankPivot> {
         return belongsToMany(MemberRankPivot::class)

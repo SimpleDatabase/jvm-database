@@ -12,10 +12,10 @@ import de.plk.database.model.privot.MemberRankPivot
  * Copyright © 2024 | SoftwareBuilds | All rights reserved.
  */
 fun main() {
-    AbstractModel.getSchema(Member::class).create()
-    AbstractModel.getSchema(MemberRankPivot::class).create()
-    AbstractModel.getSchema(Rank::class).create()
     AbstractModel.getSchema(Group::class).create()
+    AbstractModel.getSchema(Member::class).create()
+    AbstractModel.getSchema(Rank::class).create()
+    AbstractModel.getSchema(MemberRankPivot::class).create()
 
     val model = Member()
 

@@ -9,6 +9,7 @@ import de.plk.database.model.meta.Relation
 import de.plk.database.model.meta.Table
 import de.plk.database.model.meta.type.ColumnDataType
 import de.plk.database.model.relation.many.BelongsToMany
+import de.plk.database.model.relation.many.HasMany
 import java.util.UUID
 
 /**
@@ -24,6 +25,15 @@ class MemberRankPivot() : AbstractModel<MemberRankPivot>() {
         this.rankId = rankId
         this.memberId = memberId
     }
+
+
+    @Column(
+        columnName = "pivotId",
+        primary = true,
+        dataType = ColumnDataType.VARCHAR,
+        size = 16
+    )
+    var pivotId: UUID? = null
 
     @Column(
         columnName = "rankId",
@@ -51,18 +61,18 @@ class MemberRankPivot() : AbstractModel<MemberRankPivot>() {
 
     @Relation(
         relatedModel = Member::class,
-        realtionType = BelongsToMany::class
+        relationType = BelongsToMany::class
     )
-    fun members(): BelongsToMany<MemberRankPivot, Member> {
-        return belongsToMany(Member::class)
+    fun members(): HasMany<MemberRankPivot, Member> {
+        return hasMany(Member::class)
     }
 
     @Relation(
         relatedModel = Rank::class,
-        realtionType = BelongsToMany::class
+        relationType = BelongsToMany::class,
     )
-    fun ranks(): BelongsToMany<MemberRankPivot, Rank> {
-        return belongsToMany(Rank::class)
+    fun ranks(): HasMany<MemberRankPivot, Rank> {
+        return hasMany(Rank::class)
     }
 
 }

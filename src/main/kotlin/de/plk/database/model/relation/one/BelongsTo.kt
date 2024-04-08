@@ -2,7 +2,6 @@ package de.plk.database.model.relation.one
 
 import de.plk.database.model.AbstractModel
 import de.plk.database.model.relation.DirectedRelation
-import de.plk.database.model.relation.IndirectRelation
 import de.plk.database.sql.build.QueryBuilder
 
 /**
