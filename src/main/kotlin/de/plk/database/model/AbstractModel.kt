@@ -18,6 +18,7 @@ import de.plk.database.sql.command.CommandClosure
 import de.plk.database.sql.command.condition.Where
 import kotlin.reflect.KClass
 import kotlin.reflect.full.createInstance
+import kotlin.reflect.full.primaryConstructor
 
 /**
  * Defines that any subclass is a database model.
@@ -130,7 +131,7 @@ open abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, Model
      * {@inheritDoc}
      */
     override fun where(column: String, needle: Any, operand: QueryBuilder.Operand): QueryBuilder<M> {
-        wheres.add(Where(column, needle, operand))
+        wheres.add(Where(wheres.isEmpty(), column, needle, operand))
         return this
     }
 
@@ -138,7 +139,7 @@ open abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, Model
      * {@inheritDoc}
      */
     override fun orWhere(column: String, needle: Any, operand: QueryBuilder.Operand): QueryBuilder<M> {
-        wheres.add(Where(column, needle, operand, Where.Type.OR))
+        wheres.add(Where(wheres.isEmpty(), column, needle, operand, Where.Type.OR))
         return this
     }
 
@@ -146,7 +147,7 @@ open abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, Model
      * {@inheritDoc}
      */
     override fun andWhere(column: String, needle: Any, operand: QueryBuilder.Operand): QueryBuilder<M> {
-        wheres.add(Where(column, needle, operand, Where.Type.AND))
+        wheres.add(Where(wheres.isEmpty(), column, needle, operand, Where.Type.AND))
         return this
     }
 
@@ -180,6 +181,20 @@ open abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, Model
      */
     override fun <O : AbstractModel<O>> hasOne(model: KClass<O>): HasOne<M, O> {
         return HasOne(this.model, model.createInstance())
+    }
+
+    override fun build(): List<M> {
+        Command.execute(Command.SELECT, CommandClosure {
+            val buildings = StringBuilder()
+
+            wheres.forEach {
+                buildings.append(it)
+            }
+
+            return@CommandClosure arrayOf(columns.map { it.columnName }.joinToString(", "), table.tableName, buildings.toString())
+        })
+
+        return listOf()
     }
 
     companion object {

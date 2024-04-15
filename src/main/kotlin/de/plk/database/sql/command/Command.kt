@@ -25,7 +25,7 @@ enum class Command(
     /**
      * The select command pattern.
      */
-    SELECT("SELECT %s FROM %s"),
+    SELECT("SELECT %s FROM %s %s"),
 
     /**
      * The update command pattern.

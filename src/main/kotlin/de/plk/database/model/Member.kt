@@ -26,10 +26,10 @@ class Member(
         primary = true,
         nullable = false,
         dataType = ColumnDataType.INT
-    ) val memberId: Int
+    ) var memberId: Int? = null
 ) : AbstractModel<Member>() {
 
-    constructor(memberId: Int, name: String): this(memberId) {
+    constructor(memberId: Int?, name: String): this(memberId) {
         this.name = name
     }
 

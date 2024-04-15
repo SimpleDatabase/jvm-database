@@ -46,6 +46,8 @@ interface QueryBuilder<M : AbstractModel<M>> : BelongsBuilder<M>, HasBuilder<M> 
      */
     fun andWhere(column: String, needle: Any, operand: Operand = Operand.EQUAL): QueryBuilder<M>
 
+    fun build(): List<M>
+
     /**
      * The operand for where condition.
      */
