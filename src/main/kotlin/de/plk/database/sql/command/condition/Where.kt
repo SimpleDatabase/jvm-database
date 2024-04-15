@@ -7,6 +7,8 @@ import de.plk.database.sql.build.QueryBuilder
  */
 data class Where(
 
+    val first: Boolean = false,
+
     /**
      * The string of the column to check.
      */
@@ -34,9 +36,11 @@ data class Where(
     override fun toString(): String {
         val where = StringBuilder()
 
-        when (type) {
-            Type.OR -> where.append(" OR ")
-            Type.AND, Type.NORMAL -> where.append(" AND ")
+        if (!first) {
+            when (type) {
+                Type.OR -> where.append(" OR ")
+                Type.AND, Type.NORMAL -> where.append(" AND ")
+            }
         }
 
         where.append("WHERE ${column} ${operand.operand} ${needle}")

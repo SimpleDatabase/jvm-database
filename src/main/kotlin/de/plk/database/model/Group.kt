@@ -17,7 +17,7 @@ class Group(
         primary = true,
         nullable = false,
         dataType = ColumnDataType.INT
-    ) val groupId: Int
+    ) var groupId: Int? = null
 ) : AbstractModel<Group>() {
 
     constructor(groupId: Int, groupName: String): this(groupId) {
