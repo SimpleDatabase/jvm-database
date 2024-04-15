@@ -4,6 +4,7 @@ import de.plk.database.action.companion.ModelEventType
 import de.plk.database.model.meta.*
 import de.plk.database.model.meta.type.ColumnDataType
 import de.plk.database.model.relation.one.HasOne
+import de.plk.database.sql.build.QueryBuilder
 
 /**
  * @author SoftwareBuilds
@@ -42,6 +43,10 @@ class Group(
 
     init {
         boot(this)
+    }
+
+    fun underEighteen(): QueryBuilder<Group> {
+        return where("age", 18, QueryBuilder.Operand.SMALLER)
     }
 
     override fun boot(model: Group) {

@@ -19,7 +19,15 @@ fun main() {
     AbstractModel.getSchema(MemberRankPivot::class).create()
 
     val model = Member(memberId = 1)
-    println(model.group().related.where("id", 2, QueryBuilder.Operand.LIKE).orWhere("name", "Phil", QueryBuilder.Operand.LIKE).build())
+
+    println(
+        model.group().related
+            .underEighteen()
+            .where("id", 2, QueryBuilder.Operand.LIKE)
+            .orWhere("name", "Phil", QueryBuilder.Operand.LIKE)
+            .build()
+    )
+
     model.name = "Phil"
     model.save()
 }
