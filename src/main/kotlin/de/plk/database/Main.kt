@@ -6,6 +6,8 @@ import de.plk.database.model.Member
 import de.plk.database.model.Rank
 import de.plk.database.model.privot.MemberRankPivot
 import de.plk.database.sql.build.QueryBuilder
+import de.plk.database.sql.command.Command
+import java.util.*
 
 /**
  * @author SoftwareBuilds
@@ -13,6 +15,21 @@ import de.plk.database.sql.build.QueryBuilder
  * Copyright © 2024 | SoftwareBuilds | All rights reserved.
  */
 fun main() {
+    val properties = Properties()
+
+    properties.setProperty("hostname", "localhost")
+    properties.setProperty("port", "3306")
+    properties.setProperty("database", "jvm_database")
+    properties.setProperty("username", "root")
+    properties.setProperty("password", "")
+
+    Command.pool = DatabasePool(
+        DatabaseSource(
+            DatabaseType.MARIADB,
+            properties
+        )
+    )
+
     AbstractModel.getSchema(Group::class).create()
     AbstractModel.getSchema(Member::class).create()
     AbstractModel.getSchema(Rank::class).create()
@@ -21,11 +38,10 @@ fun main() {
     val model = Member(memberId = 1)
 
     println(
-        model.group().related
-            .underEighteen()
-            .where("id", 2, QueryBuilder.Operand.LIKE)
-            .orWhere("name", "Phil", QueryBuilder.Operand.LIKE)
-            .build()
+        model.ranks().related
+            .where("memberId", 1, QueryBuilder.Operand.LIKE)
+            .build(MemberRankPivot::class)
+            .first().memberId
     )
 
     model.name = "Phil"

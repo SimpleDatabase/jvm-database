@@ -155,10 +155,9 @@ open abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, Model
      * {@inheritDoc}
      */
     override fun <O : AbstractModel<O>> belongsToMany(model: KClass<O>): BelongsToMany<M, O> {
-        val relatedModel = model.createInstance()
         return BelongsToMany(
             this.model,
-            relatedModel
+            model.createInstance()
         )
     }
 
@@ -183,8 +182,8 @@ open abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, Model
         return HasOne(this.model, model.createInstance())
     }
 
-    override fun build(): List<M> {
-        Command.execute(Command.SELECT, CommandClosure {
+    override fun build(clazz: KClass<M>): List<M> {
+        var result = Command.execute(Command.SELECT, CommandClosure {
             val buildings = StringBuilder()
 
             wheres.forEach {
@@ -194,7 +193,13 @@ open abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, Model
             return@CommandClosure arrayOf(columns.map { it.columnName }.joinToString(", "), table.tableName, buildings.toString())
         })
 
-        return listOf()
+        return result.resultSet.map {
+            var columns = it.value.map {
+                it.value
+            }
+
+            return@map clazz.primaryConstructor?.call(columns[0])!!
+        }
     }
 
     companion object {

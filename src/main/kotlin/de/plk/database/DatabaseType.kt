@@ -21,12 +21,12 @@ enum class DatabaseType(
     /**
      * SQLite.
      */
-    SQLITE("sqlite:%s", arrayOf("database")),
+    SQLITE("jdbc:sqlite:%s", arrayOf("database")),
 
     /**
      * MariaDB/ MySQL.
      */
-    MARIADB("mysql://%s:%s/%s?user=%s&password=%s", arrayOf(
+    MARIADB("jdbc:mysql://%s:%s/%s?user=%s&password=%s", arrayOf(
         "hostname",
         "port",
         "database",
@@ -41,6 +41,7 @@ enum class DatabaseType(
      *
      * @return The connection URI value as string.
      */
-    fun getConnectionURI(vararg replacements: String): String =
-        connectionURI.format(replacements)
+    fun getConnectionURI(vararg replacements: String): String {
+        return connectionURI.format(*replacements)
+    }
 }

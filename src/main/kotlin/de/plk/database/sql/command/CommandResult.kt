@@ -19,6 +19,6 @@ class CommandResult(
     /**
      * The selected rows from a query command.
      */
-    var resultSet: Map<Int, Map<String, Any>> = mapOf()
+    var resultSet: MutableMap<Int, MutableMap<String, Any>> = mutableMapOf()
 
 }

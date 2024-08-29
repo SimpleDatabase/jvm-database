@@ -69,7 +69,6 @@ class Member(
     @Relation(
         relationType = BelongsTo::class,
         relatedModel = Group::class,
-        pivot = true
     )
     fun group(): BelongsTo<Member, Group> {
         return belongsTo(Group::class)
