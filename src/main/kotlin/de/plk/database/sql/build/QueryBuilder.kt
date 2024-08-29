@@ -3,6 +3,7 @@ package de.plk.database.sql.build
 import de.plk.database.model.AbstractModel
 import de.plk.database.sql.relation.BelongsBuilder
 import de.plk.database.sql.relation.HasBuilder
+import kotlin.reflect.KClass
 
 /**
  * Represents a sql-builder with the information from the model.
@@ -46,7 +47,7 @@ interface QueryBuilder<M : AbstractModel<M>> : BelongsBuilder<M>, HasBuilder<M> 
      */
     fun andWhere(column: String, needle: Any, operand: Operand = Operand.EQUAL): QueryBuilder<M>
 
-    fun build(): List<M>
+    fun build(clazz: KClass<M>): List<M>
 
     /**
      * The operand for where condition.

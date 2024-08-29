@@ -25,10 +25,12 @@ class MemberRankPivot(
     ) val pivotId: Int
 ) : AbstractModel<MemberRankPivot>() {
 
+    constructor(): this(0)
+
     constructor(
         pivotId: Int,
-        rankId: UUID,
-        memberId: UUID
+        rankId: Int,
+        memberId: Int
     ) : this(pivotId) {
         this.rankId = rankId
         this.memberId = memberId
@@ -38,13 +40,13 @@ class MemberRankPivot(
         columnName = "rankId",
         dataType = ColumnDataType.INT,
     )
-    var rankId: UUID? = null
+    var rankId: Int? = null
 
     @Column(
         columnName = "memberId",
         dataType = ColumnDataType.INT,
     )
-    var memberId: UUID? = null
+    var memberId: Int? = null
 
     init {
         boot(this)

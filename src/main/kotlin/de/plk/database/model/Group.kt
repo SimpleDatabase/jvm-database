@@ -3,6 +3,7 @@ package de.plk.database.model
 import de.plk.database.action.companion.ModelEventType
 import de.plk.database.model.meta.*
 import de.plk.database.model.meta.type.ColumnDataType
+import de.plk.database.model.relation.many.HasMany
 import de.plk.database.model.relation.one.HasOne
 import de.plk.database.sql.build.QueryBuilder
 
