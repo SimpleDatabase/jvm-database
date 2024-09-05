@@ -125,6 +125,7 @@ enum class Command(
                             }
 
                             result.fullfilled = true
+
                         }
                     }
                 }
