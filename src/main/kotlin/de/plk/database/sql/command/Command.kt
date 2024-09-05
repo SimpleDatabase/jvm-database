@@ -77,7 +77,7 @@ enum class Command(
         /**
          * The command pool with sql connections.
          */
-        private lateinit var pool: DatabasePool
+        lateinit var pool: DatabasePool
 
         /**
          * Execute a sql command.
@@ -96,8 +96,6 @@ enum class Command(
 
             println(sql)
 
-            return result
-
             val connection = pool.getConnection()
 
             val statement: PreparedStatement = connection.prepareStatement(sql)
@@ -111,22 +109,23 @@ enum class Command(
                         val callback = statement.executeQuery()
 
                         callback.use {
-                            result.fullfilled = !callback.wasNull()
-
                             // remove last element, to get only the columns to get theirs values.
-                            val commandReplacements = commandReplacements.slice(0..commandReplacements.size - 1)
+                            val commandReplacements = commandReplacements.slice(0..commandReplacements.size - 2)
 
                             // go to snack each row in table.
                             while (callback.next()) {
-                                result.resultSet.plus(Pair(callback.row, mapOf()))
+                                result.resultSet.put(callback.row, mutableMapOf())
 
                                 // add all the queried columns to the query map.
-                                commandReplacements.forEach {
-                                    result.resultSet[callback.row]?.plus(Pair(
+                                commandReplacements[0].split(", ").forEach {
+                                    result.resultSet[callback.row]?.put(
                                         it, callback.getObject(it)
-                                    ))
+                                    )
                                 }
                             }
+
+                            result.fullfilled = true
+
                         }
                     }
                 }

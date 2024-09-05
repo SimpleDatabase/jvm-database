@@ -41,9 +41,11 @@ data class Where(
                 Type.OR -> where.append(" OR ")
                 Type.AND, Type.NORMAL -> where.append(" AND ")
             }
+        } else {
+            where.append("WHERE ")
         }
 
-        where.append("WHERE ${column} ${operand.operand} ${needle}")
+        where.append("${column} ${operand.operand} ${needle}")
 
         return where.toString()
     }
