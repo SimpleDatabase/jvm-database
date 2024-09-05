@@ -83,7 +83,7 @@ This project is built with the following technologies:
 - [ ] Load relations correctly
 - [ ] Add kotlin jvm tests
 
-See the [open issues](https://github.com/SimpleDatabase/jvm-database/issues) for a full list of proposed features (and
+See the [open issues](https://github.com/simpledatabase/jvm-database/issues) for a full list of proposed features (and
 known issues).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -121,7 +121,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 ## Contact
 
-Project Link: [https://github.com/SimpleDatabase/jvm-database](https://github.com/SimpleDatabase/jvm-database)
+Project Link: [https://github.com/simpledatabase/jvm-database](https://github.com/simpledatabase/jvm-database)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -129,21 +129,21 @@ Project Link: [https://github.com/SimpleDatabase/jvm-database](https://github.co
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
-[forks-shield]: https://img.shields.io/github/forks/SimpleDatabase/jvm-database.svg?style=for-the-badge
+[forks-shield]: https://img.shields.io/github/forks/simpledatabase/jvm-database.svg?style=for-the-badge
 
-[forks-url]: https://github.com/SimpleDatabase/jvm-database/network/members
+[forks-url]: https://github.com/simpledatabase/jvm-database/network/members
 
-[stars-shield]: https://img.shields.io/github/stars/SimpleDatabase/jvm-database.svg?style=for-the-badge
+[stars-shield]: https://img.shields.io/github/stars/simpledatabase/jvm-database.svg?style=for-the-badge
 
-[stars-url]: https://github.com/SimpleDatabase/jvm-database/stargazers
+[stars-url]: https://github.com/simpledatabase/jvm-database/stargazers
 
-[issues-shield]: https://img.shields.io/github/issues/SimpleDatabase/jvm-database.svg?style=for-the-badge
+[issues-shield]: https://img.shields.io/github/issues/simpledatabase/jvm-database.svg?style=for-the-badge
 
-[issues-url]: https://github.com/SimpleDatabase/jvm-database/issues
+[issues-url]: https://github.com/simpledatabase/jvm-database/issues
 
-[license-shield]: https://img.shields.io/github/license/SimpleDatabase/jvm-database.svg?style=for-the-badge
+[license-shield]: https://img.shields.io/github/license/simpledatabase/jvm-database.svg?style=for-the-badge
 
-[license-url]: https://github.com/SimpleDatabase/jvm-database/blob/master/LICENSE.txt
+[license-url]: https://github.com/simpledatabase/jvm-database/blob/master/LICENSE.txt
 
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 
