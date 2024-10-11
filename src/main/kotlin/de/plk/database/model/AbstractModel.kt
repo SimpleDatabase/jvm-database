@@ -6,6 +6,7 @@ import de.plk.database.model.event.EventClosure
 import de.plk.database.model.meta.Column
 import de.plk.database.model.meta.MetaReader
 import de.plk.database.model.meta.Table
+import de.plk.database.model.meta.type.ColumnDataType
 import de.plk.database.model.migration.Blueprint
 import de.plk.database.model.relation.many.BelongsToMany
 import de.plk.database.model.relation.many.HasMany
@@ -16,6 +17,7 @@ import de.plk.database.sql.build.QueryBuilder
 import de.plk.database.sql.command.Command
 import de.plk.database.sql.command.CommandClosure
 import de.plk.database.sql.command.condition.Where
+import java.util.Scanner
 import kotlin.reflect.KClass
 import kotlin.reflect.full.createInstance
 import kotlin.reflect.full.primaryConstructor
@@ -97,21 +99,80 @@ open abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, Model
      * Save the model.
      */
     override fun save() {
+        created = Command.execute(Command.SELECT, CommandClosure {
+            return@CommandClosure arrayOf(
+                    columns.joinToString(", ") { column -> column.columnName },
+                    table.tableName,
+                    "WHERE " + columns.find(Column::primary)!!.columnName + " = " + MetaReader.readValue(model,
+                        columns.find(Column::primary)!!.columnName
+                    )
+                )
+        }).resultSet.size == 1
+
         when (created) {
 
             // Creating the model as row in the database.
             false -> {
-                created = true
                 applyEvent(ModelEventType.SAVING)
+
+                Command.execute(Command.INSERT, CommandClosure {
+                    return@CommandClosure arrayOf(
+                        table.tableName + " (" + columns.joinToString(", ") { column -> column.columnName } + ") ",
+                        "(" + columns.joinToString(", ") { column ->
+
+                            when (column.dataType) {
+                                ColumnDataType.TEXT, ColumnDataType.VARCHAR ->
+                                    return@joinToString "'" + MetaReader.readValue(model, column.columnName) + "'"
+
+                                else ->
+                                    return@joinToString MetaReader.readValue(model, column.columnName).toString()
+                            }
+                        } + ')')
+                })
+
+                created = true
+
+                applyEvent(ModelEventType.SAVED)
             }
 
             // Saving the model to the given row in the database.
             true -> {
                 applyEvent(ModelEventType.UPDATING)
 
+                Command.execute(Command.UPDATE, CommandClosure {
+                    return@CommandClosure arrayOf(
+                        table.tableName,
+                        columns.joinToString(", ") { column ->
+
+                            when (column.dataType) {
+                                ColumnDataType.TEXT, ColumnDataType.VARCHAR ->
+                                    return@joinToString column.columnName + " = '" + MetaReader.readValue(model, column.columnName) + "'"
+
+                                else ->
+                                    return@joinToString column.columnName + " = " + MetaReader.readValue(model, column.columnName).toString()
+                            }
+                        })
+                })
+
                 applyEvent(ModelEventType.UPDATED)
             }
         }
+    }
+
+    fun load() {
+        var result = Command.execute(Command.SELECT, CommandClosure {
+            return@CommandClosure arrayOf(
+                columns.joinToString(", ") { column -> column.columnName },
+                table.tableName,
+                "WHERE " + columns.find(Column::primary)!!.columnName + " = " + MetaReader.readValue(model,
+                    columns.find(Column::primary)!!.columnName
+                )
+            )
+        })
+
+        println(result.resultSet[1]!!.forEach { t, u ->
+            MetaReader.setValue(model, t, u)
+        })
     }
 
     /**
@@ -121,7 +182,13 @@ open abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, Model
         applyEvent(ModelEventType.DELETING)
 
         Command.execute(Command.DELETE, CommandClosure {
-            return@CommandClosure arrayOf(table.tableName)
+            return@CommandClosure arrayOf(
+                table.tableName
+                        + " WHERE "
+                        + columns.find(Column::primary)!!.columnName
+                        + " = "
+                        + MetaReader.readValue(model, columns.find(Column::primary)!!.columnName)
+            )
         })
 
         applyEvent(ModelEventType.DELETED)
@@ -190,7 +257,7 @@ open abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, Model
                 buildings.append(it)
             }
 
-            return@CommandClosure arrayOf(columns.map { it.columnName }.joinToString(", "), table.tableName, buildings.toString())
+            return@CommandClosure arrayOf(columns.joinToString(", ") { it.columnName }, table.tableName, buildings.toString())
         })
 
         return result.resultSet.map {

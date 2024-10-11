@@ -2,6 +2,7 @@ package de.plk.database.model.meta
 
 import de.plk.database.model.AbstractModel
 import kotlin.reflect.KClass
+import kotlin.reflect.KMutableProperty
 import kotlin.reflect.full.findAnnotations
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.isAccessible
@@ -75,6 +76,17 @@ object MetaReader {
         }.firstOrNull()
 
         return property?.call(model)
+    }
+
+    fun <M : AbstractModel<M>> setValue(
+        model: M, columnName: String, value: Any
+    ) {
+        val property = model::class.memberProperties.filter {
+            return@filter it.findAnnotations(Column::class).isNotEmpty() && it.findAnnotations(Column::class)
+                .first().columnName == columnName
+        }.firstOrNull()
+
+        (property as KMutableProperty<*>).setter.call(model, value)
     }
 
 }

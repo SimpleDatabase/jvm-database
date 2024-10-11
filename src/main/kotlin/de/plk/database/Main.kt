@@ -21,7 +21,7 @@ fun main() {
     properties.setProperty("port", "3306")
     properties.setProperty("database", "jvm_database")
     properties.setProperty("username", "root")
-    properties.setProperty("password", "")
+    properties.setProperty("password", "xyz")
 
     Command.pool = DatabasePool(
         DatabaseSource(
@@ -35,15 +35,17 @@ fun main() {
     AbstractModel.getSchema(Rank::class).create()
     AbstractModel.getSchema(MemberRankPivot::class).create()
 
-    val model = Member(memberId = 1)
-
-    println(
-        model.ranks().related
-            .where("memberId", 1, QueryBuilder.Operand.LIKE)
-            .build(MemberRankPivot::class)
-            .first().memberId
-    )
-
-    model.name = "Phil"
+    val model = Group(groupId = 0)
+    model.groupName = "TEST";
     model.save()
+
+    model.load()
+    println(model.groupName)
+
+    model.groupName = "NICE";
+    model.save()
+
+    model.load()
+    println(model.groupName)
+
 }
