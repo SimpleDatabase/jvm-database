@@ -3,7 +3,13 @@ package de.plk.database.sql.command
 /**
  * Represents the sql command result.
  */
-class CommandResult {
+class CommandResult(
+
+    /**
+     * Represents that the command was an update.
+     */
+    val update: Boolean
+) {
 
     /**
      * The sql command runs sucessfully.

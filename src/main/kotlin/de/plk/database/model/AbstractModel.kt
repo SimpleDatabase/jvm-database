@@ -182,9 +182,9 @@ abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, ModelOpera
             )
         })
 
-        println(result.resultSet[1]!!.forEach { t, u ->
-            MetaReader.setValue(model, t, u)
-        })
+        result.resultSet[1]!!.forEach { columnName, value ->
+            MetaReader.setValue(model, columnName, value)
+        }
     }
 
     /**
