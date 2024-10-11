@@ -1,0 +1,16 @@
+services:
+  mariadb:
+    image: mariadb:latest
+    stop_grace_period: 30s
+    environment:
+      MYSQL_ROOT_PASSWORD: 'xyz'
+      MYSQL_DATABASE: 'jvm_database'
+      MYSQL_USER: 'jvm_user'
+      MYSQL_PASSWORD: 'xyz'
+    volumes:
+      - mariadb_volume:/var/lib/mysql
+    ports:
+      - 3306:3306
+
+volumes:
+  mariadb_volume:
