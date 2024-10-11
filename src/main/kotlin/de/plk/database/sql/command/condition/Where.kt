@@ -38,14 +38,17 @@ data class Where(
 
         if (!first) {
             when (type) {
-                Type.OR -> where.append(" OR ")
-                Type.AND, Type.NORMAL -> where.append(" AND ")
+                Type.OR -> where.append("OR ")
+                Type.AND, Type.NORMAL -> where.append("AND ")
             }
         } else {
             where.append("WHERE ")
         }
 
-        where.append("${column} ${operand.operand} ${needle}")
+        when (operand) {
+            QueryBuilder.Operand.LIKE -> where.append("$column ${operand.operand} '$needle'")
+            else -> where.append("$column ${operand.operand} $needle")
+        }
 
         return where.toString()
     }

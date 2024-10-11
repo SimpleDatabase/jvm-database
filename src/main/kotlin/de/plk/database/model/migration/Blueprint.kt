@@ -44,9 +44,9 @@ class Blueprint<M : AbstractModel<M>>(
 
         relations.forEach {
             val relatedTableInformation = MetaReader.readClassAnnotation(it.relatedModel, Table::class)
-            var primaryColumn = MetaReader.readAllPropertyAnnotations(it.relatedModel, Column::class).filter {
+            var primaryColumn = MetaReader.readAllPropertyAnnotations(it.relatedModel, Column::class).first {
                 it.primary
-            }.first()
+            }
 
             if (it.relationType == BelongsTo::class) {
                 relationLines = relationLines.plus(arrayOf(

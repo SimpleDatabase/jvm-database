@@ -5,7 +5,6 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.full.findAnnotations
 import kotlin.reflect.full.memberProperties
-import kotlin.reflect.jvm.isAccessible
 
 /**
  * This class holds functions to read meta annotations from a model class.
@@ -38,7 +37,7 @@ object MetaReader {
         modelClass: KClass<out M>, annotation: KClass<A>
     ): List<A> {
         return modelClass.memberProperties.filter {
-            it.findAnnotations(annotation).size != 0
+            it.findAnnotations(annotation).isNotEmpty()
         }.map {
             it.findAnnotations(annotation).first()
         }
@@ -62,7 +61,6 @@ object MetaReader {
      * Get the searched property of a model.
      *
      * @param model      The model data.
-     * @param annotation The specific annotation class.
      * @param columnName The column to identify the property.
      *
      * @return <M> The property of the model.
@@ -78,6 +76,15 @@ object MetaReader {
         return property?.call(model)
     }
 
+    /**
+     * Set the property of a model with a new value.
+     *
+     * @param model      The model data.
+     * @param columnName The column to identify the property.
+     * @param value      The new value for the property.
+     *
+     * @return <M> The property of the model.
+     */
     fun <M : AbstractModel<M>> setValue(
         model: M, columnName: String, value: Any
     ) {

@@ -10,7 +10,6 @@ import de.plk.database.model.meta.Table
 import de.plk.database.model.meta.type.ColumnDataType
 import de.plk.database.model.relation.many.BelongsToMany
 import de.plk.database.model.relation.many.HasMany
-import java.util.UUID
 
 /**
  * Defines that any subclass is a database model.
@@ -51,10 +50,10 @@ class MemberRankPivot(
     init {
         boot(this)
 
-        event(ModelEventType.SAVING, {
+        event(ModelEventType.SAVING) {
             println("SAVING memberId: " + it.memberId)
             println("SAVING rankId: " + it.rankId)
-        })
+        }
 
     }
 

@@ -5,6 +5,7 @@ import de.plk.database.action.operation.ModelOperation
 import de.plk.database.model.event.EventClosure
 import de.plk.database.model.meta.Column
 import de.plk.database.model.meta.MetaReader
+import de.plk.database.model.meta.ScopeBy
 import de.plk.database.model.meta.Table
 import de.plk.database.model.meta.type.ColumnDataType
 import de.plk.database.model.migration.Blueprint
@@ -17,7 +18,6 @@ import de.plk.database.sql.build.QueryBuilder
 import de.plk.database.sql.command.Command
 import de.plk.database.sql.command.CommandClosure
 import de.plk.database.sql.command.condition.Where
-import java.util.Scanner
 import kotlin.reflect.KClass
 import kotlin.reflect.full.createInstance
 import kotlin.reflect.full.primaryConstructor
@@ -25,7 +25,7 @@ import kotlin.reflect.full.primaryConstructor
 /**
  * Defines that any subclass is a database model.
  */
-open abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, ModelOperation {
+abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, ModelOperation {
 
     /**
      * The sub model instance.
@@ -40,7 +40,7 @@ open abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, Model
     /**
      * The registered scopes for this model.
      */
-    protected val globalScopes= mutableListOf<GlobalScope<M>>()
+    protected val globalScopes = mutableListOf<GlobalScope<M>>()
 
     /**
      * True if model ist not created/ saved yet.
@@ -70,6 +70,12 @@ open abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, Model
 
         table = MetaReader.readClassAnnotation(model::class, Table::class)
         columns = MetaReader.readAllPropertyAnnotations(model::class, Column::class)
+
+        MetaReader.readClassAnnotation(model::class, ScopeBy::class).scopes.forEach {
+            var scope = it.primaryConstructor!!.call() as GlobalScope<M>
+            scope.scope(model)
+            globalScopes.add(scope)
+        }
     }
 
     /**
@@ -117,7 +123,7 @@ open abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, Model
 
                 Command.execute(Command.INSERT, CommandClosure {
                     return@CommandClosure arrayOf(
-                        table.tableName + " (" + columns.joinToString(", ") { column -> column.columnName } + ") ",
+                        table.tableName + " (" + columns.joinToString(", ") { column -> column.columnName } + ")",
                         "(" + columns.joinToString(", ") { column ->
 
                             when (column.dataType) {
@@ -159,14 +165,20 @@ open abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, Model
         }
     }
 
-    fun load() {
+    override fun load() {
+        if (MetaReader.readValue(model, columns.find(Column::primary)!!.columnName) !== null) {
+            where(
+                columns.find(Column::primary)!!.columnName,
+                MetaReader.readValue(model, columns.find(Column::primary)!!.columnName)!!,
+                QueryBuilder.Operand.EQUAL
+            )
+        }
+
         var result = Command.execute(Command.SELECT, CommandClosure {
             return@CommandClosure arrayOf(
                 columns.joinToString(", ") { column -> column.columnName },
                 table.tableName,
-                "WHERE " + columns.find(Column::primary)!!.columnName + " = " + MetaReader.readValue(model,
-                    columns.find(Column::primary)!!.columnName
-                )
+                wheres.joinToString(" ") { t -> t.toString() }
             )
         })
 

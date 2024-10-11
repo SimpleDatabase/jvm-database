@@ -47,23 +47,19 @@ class Member(
     override fun boot(model: Member) {
         super.boot(model)
 
-        event(ModelEventType.SAVING, {
+        event(ModelEventType.SAVING) {
             println("SAVING memberId: " + it.memberId)
             println("SAVING name: " + it.name)
+        }
 
-            it.name = "TEST"
-
-            it.save()
-        })
-
-        event(ModelEventType.UPDATED, {
+        event(ModelEventType.UPDATED) {
             println("UPDATING memberId: " + it.memberId)
             println("UPDATING name: " + it.name)
-        })
+        }
     }
 
-    fun underEighteen() {
-        where("age", 18, QueryBuilder.Operand.SMALLER)
+    fun scopeNameStartsWithPhil() {
+        where("name", "Phil%", QueryBuilder.Operand.LIKE)
     }
 
     @Relation(

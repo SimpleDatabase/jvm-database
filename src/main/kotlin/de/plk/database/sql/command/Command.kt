@@ -1,9 +1,7 @@
 package de.plk.database.sql.command
 
 import de.plk.database.DatabasePool
-import de.plk.database.DatabaseSource
 import de.plk.database.sql.command.condition.Where
-import java.sql.Connection
 import java.sql.PreparedStatement
 
 /**

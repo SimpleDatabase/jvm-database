@@ -5,9 +5,9 @@ import de.plk.database.model.Group
 import de.plk.database.model.Member
 import de.plk.database.model.Rank
 import de.plk.database.model.privot.MemberRankPivot
-import de.plk.database.sql.build.QueryBuilder
 import de.plk.database.sql.command.Command
 import java.util.*
+import kotlin.system.measureTimeMillis
 
 /**
  * @author SoftwareBuilds
@@ -35,17 +35,15 @@ fun main() {
     AbstractModel.getSchema(Rank::class).create()
     AbstractModel.getSchema(MemberRankPivot::class).create()
 
-    val model = Group(groupId = 0)
-    model.groupName = "TEST";
-    model.save()
+    var time = measureTimeMillis {
+        val model = Member(memberId = null)
+        model.scopeNameStartsWithPhil()
+        model.load()
 
-    model.load()
-    println(model.groupName)
+        println(model.name)
+        println(model.memberId)
+    }
 
-    model.groupName = "NICE";
-    model.save()
-
-    model.load()
-    println(model.groupName)
+    println("IT takes: $time ms")
 
 }

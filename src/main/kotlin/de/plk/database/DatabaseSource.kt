@@ -1,10 +1,8 @@
 package de.plk.database
 
 import java.sql.Connection
-import java.sql.Driver
 import java.sql.DriverManager
 import java.util.Properties
-import kotlin.reflect.KClass
 
 /**
  * Holds basic information for new database {@link Connection}`s.
@@ -30,7 +28,6 @@ class DatabaseSource(
     private val cache: MutableList<String> = mutableListOf()
 
     init {
-        println(properties)
         if (properties.isEmpty)
             throw RuntimeException("The properties file cannot be empty.")
 

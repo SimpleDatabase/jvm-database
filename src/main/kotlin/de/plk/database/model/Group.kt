@@ -3,7 +3,6 @@ package de.plk.database.model
 import de.plk.database.action.companion.ModelEventType
 import de.plk.database.model.meta.*
 import de.plk.database.model.meta.type.ColumnDataType
-import de.plk.database.model.relation.many.HasMany
 import de.plk.database.model.relation.one.HasOne
 import de.plk.database.sql.build.QueryBuilder
 
@@ -46,26 +45,26 @@ class Group(
         boot(this)
     }
 
-    fun underEighteen(): QueryBuilder<Group> {
-        return where("age", 18, QueryBuilder.Operand.SMALLER)
+    fun scopeStartsWithPhil(): QueryBuilder<Group> {
+        return where("name", "Phil%", QueryBuilder.Operand.LIKE)
     }
 
     override fun boot(model: Group) {
         super.boot(model)
 
-        event(ModelEventType.SAVING, {
+        event(ModelEventType.SAVING) {
             println("Element with ID (${it.groupId}) saving.")
 
             println("Value of groupId ${MetaReader.readValue(this, "groupId")}")
-        })
+        }
 
-        event(ModelEventType.UPDATING, {
+        event(ModelEventType.UPDATING) {
             println("Element with ID (${it.groupId}) updated.")
-        })
+        }
 
-        event(ModelEventType.DELETED, {
+        event(ModelEventType.DELETED) {
             println("Element with ID ($groupId) deleted.")
-        })
+        }
 
     }
 

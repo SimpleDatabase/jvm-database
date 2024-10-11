@@ -11,4 +11,6 @@ interface ModelOperation {
 
     fun delete()
 
+    fun load()
+
 }
