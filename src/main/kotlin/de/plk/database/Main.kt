@@ -36,7 +36,16 @@ fun main() {
     AbstractModel.getSchema(MemberRankPivot::class).create()
 
     val model = Group(groupId = 0)
-    model.groupName = "Test2"
+    model.groupName = "TEST";
     model.save()
-    println(model.member().related.memberId)
+
+    model.load()
+    println(model.groupName)
+
+    model.groupName = "NICE";
+    model.save()
+
+    model.load()
+    println(model.groupName)
+
 }

@@ -159,6 +159,22 @@ open abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, Model
         }
     }
 
+    fun load() {
+        var result = Command.execute(Command.SELECT, CommandClosure {
+            return@CommandClosure arrayOf(
+                columns.joinToString(", ") { column -> column.columnName },
+                table.tableName,
+                "WHERE " + columns.find(Column::primary)!!.columnName + " = " + MetaReader.readValue(model,
+                    columns.find(Column::primary)!!.columnName
+                )
+            )
+        })
+
+        println(result.resultSet[1]!!.forEach { t, u ->
+            MetaReader.setValue(model, t, u)
+        })
+    }
+
     /**
      * Delete the model.
      */
@@ -166,7 +182,13 @@ open abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, Model
         applyEvent(ModelEventType.DELETING)
 
         Command.execute(Command.DELETE, CommandClosure {
-            return@CommandClosure arrayOf(table.tableName)
+            return@CommandClosure arrayOf(
+                table.tableName
+                        + " WHERE "
+                        + columns.find(Column::primary)!!.columnName
+                        + " = "
+                        + MetaReader.readValue(model, columns.find(Column::primary)!!.columnName)
+            )
         })
 
         applyEvent(ModelEventType.DELETED)
