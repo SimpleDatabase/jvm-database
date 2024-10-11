@@ -4,7 +4,6 @@ import de.plk.database.action.companion.ModelEventType
 import de.plk.database.model.meta.*
 import de.plk.database.model.meta.type.ColumnDataType
 import de.plk.database.model.relation.one.HasOne
-import de.plk.database.sql.build.QueryBuilder
 
 /**
  * @author SoftwareBuilds
@@ -45,16 +44,11 @@ class Group(
         boot(this)
     }
 
-    fun scopeStartsWithPhil(): QueryBuilder<Group> {
-        return where("name", "Phil%", QueryBuilder.Operand.LIKE)
-    }
-
     override fun boot(model: Group) {
         super.boot(model)
 
         event(ModelEventType.SAVING) {
             println("Element with ID (${it.groupId}) saving.")
-
             println("Value of groupId ${MetaReader.readValue(this, "groupId")}")
         }
 

@@ -68,10 +68,10 @@ object MetaReader {
     fun <M : AbstractModel<M>> readValue(
         model: M, columnName: String
     ): Any? {
-        val property = model::class.memberProperties.filter {
-            return@filter it.findAnnotations(Column::class).isNotEmpty() && it.findAnnotations(Column::class)
+        val property = model::class.memberProperties.firstOrNull {
+            return@firstOrNull it.findAnnotations(Column::class).isNotEmpty() && it.findAnnotations(Column::class)
                 .first().columnName == columnName
-        }.firstOrNull()
+        }
 
         return property?.call(model)
     }
@@ -88,10 +88,10 @@ object MetaReader {
     fun <M : AbstractModel<M>> setValue(
         model: M, columnName: String, value: Any
     ) {
-        val property = model::class.memberProperties.filter {
-            return@filter it.findAnnotations(Column::class).isNotEmpty() && it.findAnnotations(Column::class)
+        val property = model::class.memberProperties.firstOrNull {
+            return@firstOrNull it.findAnnotations(Column::class).isNotEmpty() && it.findAnnotations(Column::class)
                 .first().columnName == columnName
-        }.firstOrNull()
+        }
 
         (property as KMutableProperty<*>).setter.call(model, value)
     }

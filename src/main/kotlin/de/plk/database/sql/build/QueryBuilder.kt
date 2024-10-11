@@ -47,12 +47,19 @@ interface QueryBuilder<M : AbstractModel<M>> : BelongsBuilder<M>, HasBuilder<M> 
      */
     fun andWhere(column: String, needle: Any, operand: Operand = Operand.EQUAL): QueryBuilder<M>
 
+    /**
+     * Build the query.
+     */
     fun build(clazz: KClass<M>): List<M>
 
     /**
      * The operand for where condition.
      */
     enum class Operand(
+
+        /**
+         * The operand to check in a sql condition.
+         */
         val operand: String
     ) {
         EQUAL("="),

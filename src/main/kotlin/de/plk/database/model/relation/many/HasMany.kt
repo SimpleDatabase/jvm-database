@@ -13,5 +13,9 @@ class HasMany<M : AbstractModel<M>, O : AbstractModel<O>>(
      * The query builder of the base model.
      */
     builder: QueryBuilder<M>,
+
+    /**
+     * The related model.
+     */
     related: O
 ) : DirectedRelation<M, O>(builder, related)

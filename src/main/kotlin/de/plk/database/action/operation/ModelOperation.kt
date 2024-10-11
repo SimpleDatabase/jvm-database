@@ -7,10 +7,19 @@ package de.plk.database.action.operation
  */
 interface ModelOperation {
 
+    /**
+     * Saves the model to the database.
+     */
     fun save()
 
+    /**
+     * Deletes the model from the database.
+     */
     fun delete()
 
+    /**
+     * Loads the model from the database.
+     */
     fun load()
 
 }

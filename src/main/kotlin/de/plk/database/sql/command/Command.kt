@@ -95,7 +95,6 @@ enum class Command(
             println(sql)
 
             val connection = pool.getConnection()
-
             val statement: PreparedStatement = connection.prepareStatement(sql)
 
             statement.use {

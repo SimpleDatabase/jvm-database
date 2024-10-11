@@ -81,7 +81,7 @@ class Blueprint<M : AbstractModel<M>>(
 
             var columnAttributes = arrayOf<String>()
 
-            // add the schema row for each column
+            // Add the schema row for each column.
             columns.forEach {
 
                 var columnAttribut = arrayOf(

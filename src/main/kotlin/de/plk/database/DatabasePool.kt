@@ -82,7 +82,7 @@ class DatabasePool(
     fun releaseConnection(connection: Connection) {
         if (POOL.size < poolSize) return
         if (isValid(connection)) POOL.push(connection)
-        else if (!isValid(connection)) POOL.push(createConnection())
+        POOL.push(createConnection())
     }
 
     /**

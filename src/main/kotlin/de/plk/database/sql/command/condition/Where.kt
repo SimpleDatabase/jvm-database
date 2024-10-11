@@ -7,6 +7,9 @@ import de.plk.database.sql.build.QueryBuilder
  */
 data class Where(
 
+    /**
+     * True if this is the first where in a sql command.
+     */
     val first: Boolean = false,
 
     /**

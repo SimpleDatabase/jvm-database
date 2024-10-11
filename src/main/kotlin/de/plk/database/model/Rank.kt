@@ -22,6 +22,10 @@ class Rank(
     ) val rankId: Int
 ) : AbstractModel<Rank>() {
 
+    init {
+        boot(this)
+    }
+
     constructor(rankId: Int, name: String): this(rankId) {
         this.name = name
     }
@@ -32,10 +36,6 @@ class Rank(
         size = 255
     )
     var name: String? = null
-
-    init {
-        boot(this)
-    }
 
     @Relation(
         relationType = BelongsToMany::class,
