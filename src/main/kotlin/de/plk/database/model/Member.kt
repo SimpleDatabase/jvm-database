@@ -56,6 +56,10 @@ class Member(
             println("UPDATING memberId: " + it.memberId)
             println("UPDATING name: " + it.name)
         }
+
+        event(ModelEventType.RETRIEVED) {
+            println("RETRIEVED data")
+        }
     }
 
     fun scopeNameStartsWithPhil() {

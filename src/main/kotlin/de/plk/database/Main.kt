@@ -17,7 +17,7 @@ import kotlin.system.measureTimeMillis
 fun main() {
     val properties = Properties()
 
-    properties.setProperty("hostname", "localhost")
+   properties.setProperty("hostname", "localhost")
     properties.setProperty("port", "3306")
     properties.setProperty("database", "jvm_database")
     properties.setProperty("username", "root")
@@ -25,7 +25,7 @@ fun main() {
 
     Command.pool = DatabasePool(
         DatabaseSource(
-            DatabaseType.MARIADB,
+            DatabaseType.SQLITE,
             properties
         )
     )
@@ -36,12 +36,11 @@ fun main() {
     AbstractModel.getSchema(MemberRankPivot::class).create()
 
     var time = measureTimeMillis {
-        val model = Member(memberId = null)
-        model.scopeNameStartsWithPhil()
-        model.load()
+        val model = Member(memberId = 2)
 
-        println(model.name)
-        println(model.memberId)
+        model.name = "TEST2";
+
+        model.save()
     }
 
     println("IT takes: $time ms")

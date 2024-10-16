@@ -146,6 +146,14 @@ abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, ModelOpera
                 applyEvent(ModelEventType.UPDATING)
 
                 Command.execute(Command.UPDATE, CommandClosure {
+                    if (MetaReader.readValue(model, columns.find(Column::primary)!!.columnName) !== null) {
+                        where(
+                            columns.find(Column::primary)!!.columnName,
+                            MetaReader.readValue(model, columns.find(Column::primary)!!.columnName)!!,
+                            QueryBuilder.Operand.EQUAL
+                        )
+                    }
+
                     return@CommandClosure arrayOf(
                         table.tableName,
                         columns.joinToString(", ") { column ->
@@ -157,7 +165,7 @@ abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, ModelOpera
                                 else ->
                                     return@joinToString column.columnName + " = " + MetaReader.readValue(model, column.columnName).toString()
                             }
-                        })
+                        } + " " + wheres.joinToString(" ") { t -> t.toString() })
                 })
 
                 applyEvent(ModelEventType.UPDATED)
@@ -185,6 +193,8 @@ abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, ModelOpera
         result.resultSet[1]!!.forEach { columnName, value ->
             MetaReader.setValue(model, columnName, value)
         }
+
+        applyEvent(ModelEventType.RETRIEVED)
     }
 
     /**

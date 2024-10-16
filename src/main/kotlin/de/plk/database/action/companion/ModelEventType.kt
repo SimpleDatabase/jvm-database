@@ -9,8 +9,6 @@ package de.plk.database.action.companion
 enum class ModelEventType {
 
     RETRIEVED,
-    CREATING,
-    CREATED,
     UPDATING,
     UPDATED,
     SAVING,
