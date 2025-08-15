@@ -71,11 +71,11 @@ abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, ModelOpera
         table = MetaReader.readClassAnnotation(model::class, Table::class)
         columns = MetaReader.readAllPropertyAnnotations(model::class, Column::class)
 
-        MetaReader.readClassAnnotation(model::class, ScopeBy::class).scopes.forEach {
-            var scope = it.primaryConstructor!!.call() as GlobalScope<M>
+      /*  MetaReader.readClassAnnotation(model::class, ScopeBy::class).scopes.forEach {
+            val scope = it.primaryConstructor!!.call() as GlobalScope<M>
             scope.scope(model)
             globalScopes.add(scope)
-        }
+        }*/
     }
 
     /**
@@ -150,7 +150,7 @@ abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, ModelOpera
                         where(
                             columns.find(Column::primary)!!.columnName,
                             MetaReader.readValue(model, columns.find(Column::primary)!!.columnName)!!,
-                            QueryBuilder.Operand.EQUAL
+                            Operand.EQUAL
                         )
                     }
 
@@ -178,7 +178,7 @@ abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, ModelOpera
             where(
                 columns.find(Column::primary)!!.columnName,
                 MetaReader.readValue(model, columns.find(Column::primary)!!.columnName)!!,
-                QueryBuilder.Operand.EQUAL
+                Operand.EQUAL
             )
         }
 
@@ -219,7 +219,7 @@ abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, ModelOpera
     /**
      * {@inheritDoc}
      */
-    override fun where(column: String, needle: Any, operand: QueryBuilder.Operand): QueryBuilder<M> {
+    override fun where(column: String, needle: Any, operand: Operand): QueryBuilder<M> {
         wheres.add(Where(wheres.isEmpty(), column, needle, operand))
         return this
     }
@@ -227,7 +227,7 @@ abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, ModelOpera
     /**
      * {@inheritDoc}
      */
-    override fun orWhere(column: String, needle: Any, operand: QueryBuilder.Operand): QueryBuilder<M> {
+    override fun orWhere(column: String, needle: Any, operand: Operand): QueryBuilder<M> {
         wheres.add(Where(wheres.isEmpty(), column, needle, operand, Where.Type.OR))
         return this
     }
@@ -235,7 +235,7 @@ abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, ModelOpera
     /**
      * {@inheritDoc}
      */
-    override fun andWhere(column: String, needle: Any, operand: QueryBuilder.Operand): QueryBuilder<M> {
+    override fun andWhere(column: String, needle: Any, operand: Operand): QueryBuilder<M> {
         wheres.add(Where(wheres.isEmpty(), column, needle, operand, Where.Type.AND))
         return this
     }

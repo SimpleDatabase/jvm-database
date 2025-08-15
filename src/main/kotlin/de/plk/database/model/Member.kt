@@ -63,7 +63,7 @@ class Member(
     }
 
     fun scopeNameStartsWithPhil() {
-        where("name", "Phil%", QueryBuilder.Operand.LIKE)
+        where("name", "Phil%", Operand.LIKE)
     }
 
     @Relation(

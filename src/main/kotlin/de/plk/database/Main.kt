@@ -4,6 +4,7 @@ import de.plk.database.model.AbstractModel
 import de.plk.database.model.Group
 import de.plk.database.model.Member
 import de.plk.database.model.Rank
+import de.plk.database.model.Operand
 import de.plk.database.model.privot.MemberRankPivot
 import de.plk.database.sql.command.Command
 import java.util.*
@@ -35,12 +36,12 @@ fun main() {
     AbstractModel.getSchema(Rank::class).create()
     AbstractModel.getSchema(MemberRankPivot::class).create()
 
-    var time = measureTimeMillis {
-        val model = Member(memberId = 2)
+    val time = measureTimeMillis {
+        val member = Member(memberId = 2)
 
-        model.name = "TEST2";
+        member.load()
 
-        model.save()
+        println(member.name)
     }
 
     println("IT takes: $time ms")

@@ -1,5 +1,6 @@
 package de.plk.database.sql.command.condition
 
+import de.plk.database.model.Operand
 import de.plk.database.sql.build.QueryBuilder
 
 /**
@@ -25,7 +26,7 @@ data class Where(
     /**
      * The used operand (EQUAL, NONEQUAL, ...).
      */
-    val operand: QueryBuilder.Operand = QueryBuilder.Operand.EQUAL,
+    val operand: Operand = Operand.EQUAL,
 
     /**
      * The where type (AND, OR, NORMAL).
@@ -49,7 +50,7 @@ data class Where(
         }
 
         when (operand) {
-            QueryBuilder.Operand.LIKE -> where.append("$column ${operand.operand} '$needle'")
+            Operand.LIKE -> where.append("$column ${operand.operand} '$needle'")
             else -> where.append("$column ${operand.operand} $needle")
         }
 

@@ -1,6 +1,7 @@
 package de.plk.database.model.scope
 
 import de.plk.database.model.Member
+import de.plk.database.model.Operand
 import de.plk.database.sql.build.QueryBuilder
 
 /**
@@ -9,7 +10,7 @@ import de.plk.database.sql.build.QueryBuilder
 class NameScope : GlobalScope<Member> {
 
     override fun scope(model: Member) {
-        model.where("name", "%h%", QueryBuilder.Operand.LIKE)
+        model.where("name", "%h%", Operand.LIKE)
     }
 
 }

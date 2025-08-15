@@ -1,6 +1,7 @@
 package de.plk.database.sql.build
 
 import de.plk.database.model.AbstractModel
+import de.plk.database.model.Operand
 import de.plk.database.sql.relation.BelongsBuilder
 import de.plk.database.sql.relation.HasBuilder
 import kotlin.reflect.KClass
@@ -51,24 +52,5 @@ interface QueryBuilder<M : AbstractModel<M>> : BelongsBuilder<M>, HasBuilder<M> 
      * Build the query.
      */
     fun build(clazz: KClass<M>): List<M>
-
-    /**
-     * The operand for where condition.
-     */
-    enum class Operand(
-
-        /**
-         * The operand to check in a sql condition.
-         */
-        val operand: String
-    ) {
-        EQUAL("="),
-        NONEQUAL("!="),
-        LIKE("LIKE"),
-        GREATHER(">"),
-        GREATHER_THAN(">="),
-        SMALLER("<"),
-        SMALLER_THAN("<=");
-    }
 
 }
