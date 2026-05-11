@@ -14,7 +14,7 @@ class DatabaseSource(
     /**
      * The sql-server engine type for the connection building.
      */
-    private val databaseType: DatabaseType,
+    private val databaseType: de.plk.database.DatabaseType,
 
     /**
      * The replacements (inc. the credentials) for the database connection-URI.

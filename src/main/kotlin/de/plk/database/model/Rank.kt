@@ -14,19 +14,14 @@ import de.plk.database.model.relation.many.BelongsToMany
  */
 @Table("ranks")
 class Rank(
-    @Column(
-        columnName = "rankId",
-        primary = true,
-        nullable = false,
-        dataType = ColumnDataType.INT,
-    ) val rankId: Int
-) : AbstractModel<Rank>() {
+     id: Int
+) : AbstractModel<Rank>(id) {
 
     init {
         boot(this)
     }
 
-    constructor(rankId: Int, name: String): this(rankId) {
+    constructor(id: Int, name: String): this(id) {
         this.name = name
     }
 

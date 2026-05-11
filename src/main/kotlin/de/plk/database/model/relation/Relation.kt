@@ -2,6 +2,7 @@ package de.plk.database.model.relation
 
 import de.plk.database.model.AbstractModel
 import de.plk.database.sql.build.QueryBuilder
+import kotlin.reflect.KClass
 
 /**
  * Represents the abstract relation.
@@ -16,5 +17,7 @@ open class Relation<M : AbstractModel<M>, O : AbstractModel<O>>(
     /**
      * The related model.
      */
-    val related: O
+    open val related: Int,
+
+    open val relatedModelClass: KClass<O>
 )

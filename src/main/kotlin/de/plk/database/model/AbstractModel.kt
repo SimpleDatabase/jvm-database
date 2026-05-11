@@ -18,9 +18,8 @@ import de.plk.database.sql.build.QueryBuilder
 import de.plk.database.sql.command.Command
 import de.plk.database.sql.command.CommandClosure
 import de.plk.database.sql.command.condition.Where
+import kotlin.jvm.java
 import kotlin.reflect.KClass
-import kotlin.reflect.full.createInstance
-import kotlin.reflect.full.primaryConstructor
 
 /**
  * Defines that any subclass is a database model.
@@ -62,6 +61,20 @@ abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, ModelOpera
      */
     private val wheres = mutableListOf<Where>()
 
+    @Column(
+        columnName = "id",
+        primary = true,
+        nullable = false,
+        dataType = ColumnDataType.INT
+    )
+    var id: Int? = null
+
+    constructor(
+        id: Int? = null
+    ) {
+        this.id = id
+    }
+
     /**
      * The boot function of model.
      */
@@ -86,7 +99,7 @@ abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, ModelOpera
      */
     protected fun event(eventType: ModelEventType, callback: EventClosure<M>) {
         if (!eventMap.containsKey(eventType)) {
-            eventMap.put(eventType, mutableListOf())
+            eventMap[eventType] = mutableListOf()
         }
 
         eventMap[eventType]!!.add(callback)
@@ -190,7 +203,7 @@ abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, ModelOpera
             )
         })
 
-        result.resultSet[1]!!.forEach { columnName, value ->
+        result.resultSet[1]?.forEach { columnName, value ->
             MetaReader.setValue(model, columnName, value)
         }
 
@@ -244,31 +257,40 @@ abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, ModelOpera
      * {@inheritDoc}
      */
     override fun <O : AbstractModel<O>> belongsToMany(model: KClass<O>): BelongsToMany<M, O> {
-        return BelongsToMany(
-            this.model,
-            model.createInstance()
-        )
+        throw NotImplementedError()
     }
 
     /**
      * {@inheritDoc}
      */
     override fun <O : AbstractModel<O>> belongsTo(model: KClass<O>): BelongsTo<M, O> {
-        return BelongsTo(this.model, model.createInstance())
+        // load the related model to get the primary key value for the foreign key column.
+        val prefixTable = MetaReader.readClassAnnotation(model, Table::class).tableName
+
+        // load with select from database the prefixtable_id value for the foreign key column.
+        val related = Command.execute(Command.SELECT, CommandClosure {
+            return@CommandClosure arrayOf(
+                prefixTable + "_id",
+                table.tableName,
+                "WHERE id = " + MetaReader.readValue(this.model, columns.find(Column::primary)!!.columnName)
+            )
+        }).resultSet[1]?.get(prefixTable + "_id") ?: throw Exception("Related model not found")
+
+        return BelongsTo(this.model, related as Int, model)
     }
 
     /**
      * {@inheritDoc}
      */
     override fun <O : AbstractModel<O>> hasMany(model: KClass<O>): HasMany<M, O> {
-        return HasMany(this.model, model.createInstance())
+        throw NotImplementedError()
     }
 
     /**
      * {@inheritDoc}
      */
     override fun <O : AbstractModel<O>> hasOne(model: KClass<O>): HasOne<M, O> {
-        return HasOne(this.model, model.createInstance())
+        throw NotImplementedError()
     }
 
     override fun build(clazz: KClass<M>): List<M> {
@@ -287,7 +309,7 @@ abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, ModelOpera
                 it.value
             }
 
-            return@map clazz.primaryConstructor?.call(columns[0])!!
+            return@map clazz.java.getDeclaredConstructor().newInstance(columns[0])!!
         }
     }
 
@@ -297,6 +319,17 @@ abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, ModelOpera
             val columns = MetaReader.readAllPropertyAnnotations(model, Column::class)
             return Blueprint(model, table, columns)
         }
+
+        fun <O : AbstractModel<O>> loadFromId(relatedModelClass: KClass<O>, related: Int): O? {
+            val ctx = relatedModelClass.constructors.first()
+
+            val instance = ctx.call(related)
+
+            instance.load()
+
+            return instance
+        }
+
     }
 
 }

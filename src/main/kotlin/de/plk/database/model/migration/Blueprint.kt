@@ -48,20 +48,12 @@ class Blueprint<M : AbstractModel<M>>(
                 it.primary
             }
 
-            if (it.relationType == BelongsTo::class) {
-                relationLines = relationLines.plus(arrayOf(
-                    primaryColumn.columnName,
-                    primaryColumn.dataType.withSize(primaryColumn.size)
-                ).joinToString(" "))
-            }
-
             if (it.relationType == BelongsTo::class || (it.relationType == BelongsToMany::class && !it.pivot)) {
                 relationLines = relationLines.plus(arrayOf(
                     "CONSTRAINT",
-                    "fk_${primaryColumn.columnName}",
-                    "FOREIGN KEY (${primaryColumn.columnName}) REFERENCES",
-                    relatedTableInformation.tableName,
-                    "(${primaryColumn.columnName})"
+                    "fk_${relatedTableInformation.tableName + "_" + primaryColumn.columnName}",
+                    "FOREIGN KEY (${relatedTableInformation.tableName + "_" + primaryColumn.columnName}) REFERENCES",
+                    relatedTableInformation.tableName + "(" + primaryColumn.columnName + ")"
                 ).joinToString(" "))
             }
         }

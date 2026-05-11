@@ -11,7 +11,7 @@ class DatabasePool(
     /**
      * The database information with credentials to create new {@link Connection}`s.
      */
-    private val databaseSource: DatabaseSource,
+    private val databaseSource: de.plk.database.DatabaseSource,
 
     /**
      * The size of the active connections in the pool.
@@ -26,7 +26,7 @@ class DatabasePool(
      *
      * @param databaseSource The database information with credentials to create new {@link Connection}`s.
      */
-    constructor(databaseSource: DatabaseSource) : this(databaseSource, 5)
+    constructor(databaseSource: de.plk.database.DatabaseSource) : this(databaseSource, 5)
 
     init {
         fill()

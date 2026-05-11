@@ -22,7 +22,9 @@ object MetaReader {
     fun <A : Annotation, M : AbstractModel<M>> readClassAnnotations(
         modelClass: KClass<out M>, annotation: KClass<A>
     ): List<A> {
-        return modelClass.findAnnotations(annotation)
+        return modelClass.annotations.find { it.annotationClass == annotation }?.let {
+            listOf(it as A)
+        } ?: emptyList()
     }
 
     /**

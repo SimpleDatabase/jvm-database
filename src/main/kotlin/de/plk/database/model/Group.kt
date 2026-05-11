@@ -12,17 +12,10 @@ import de.plk.database.model.relation.one.HasOne
  */
 @Table("groups")
 class Group(
-    @Column(
-        columnName = "groupId",
-        primary = true,
-        nullable = false,
-        dataType = ColumnDataType.INT
-    ) var groupId: Int? = null
-) : AbstractModel<Group>() {
+    id: Int? = null
+) : AbstractModel<Group>(id) {
 
-    constructor(groupId: Int, groupName: String): this(groupId) {
-        this.groupName = groupName
-    }
+    constructor(id: Int? = null, hasOne: Boolean) : this(id) {}
 
     @Column(
         columnName = "groupName",
@@ -48,16 +41,16 @@ class Group(
         super.boot(model)
 
         event(ModelEventType.SAVING) {
-            println("Element with ID (${it.groupId}) saving.")
+            println("Element with ID (${it.id}) saving.")
             println("Value of groupId ${MetaReader.readValue(this, "groupId")}")
         }
 
         event(ModelEventType.UPDATING) {
-            println("Element with ID (${it.groupId}) updated.")
+            println("Element with ID (${it.id}) updated.")
         }
 
         event(ModelEventType.DELETED) {
-            println("Element with ID ($groupId) deleted.")
+            println("Element with ID ($id) deleted.")
         }
 
     }

@@ -15,44 +15,38 @@ import de.plk.database.model.relation.many.HasMany
  * Defines that any subclass is a database model.
  */
 @Table(tableName = "member__rank")
-class MemberRankPivot(
-    @Column(
-        columnName = "pivotId",
-        primary = true,
-        nullable = false,
-        dataType = ColumnDataType.INT,
-    ) val pivotId: Int
-) : AbstractModel<MemberRankPivot>() {
+class MemberRankPivot(id: Int
+) : AbstractModel<MemberRankPivot>(id) {
 
     constructor(): this(0)
 
     constructor(
-        pivotId: Int,
-        rankId: Int,
-        memberId: Int
-    ) : this(pivotId) {
-        this.rankId = rankId
-        this.memberId = memberId
+        id: Int,
+        ranks_id: Int,
+        members_id: Int
+    ) : this(id) {
+        this.ranks_id = ranks_id
+        this.members_id = members_id
     }
 
     @Column(
-        columnName = "rankId",
+        columnName = "ranks_id",
         dataType = ColumnDataType.INT,
     )
-    var rankId: Int? = null
+    var ranks_id: Int? = null
 
     @Column(
-        columnName = "memberId",
+        columnName = "members_id",
         dataType = ColumnDataType.INT,
     )
-    var memberId: Int? = null
+    var members_id: Int? = null
 
     init {
         boot(this)
 
         event(ModelEventType.SAVING) {
-            println("SAVING memberId: " + it.memberId)
-            println("SAVING rankId: " + it.rankId)
+            println("SAVING memberId: " + it.members_id)
+            println("SAVING rankId: " + it.ranks_id)
         }
 
     }

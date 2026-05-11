@@ -3,6 +3,7 @@ package de.plk.database.model.relation.many
 import de.plk.database.model.AbstractModel
 import de.plk.database.model.relation.DirectedRelation
 import de.plk.database.sql.build.QueryBuilder
+import kotlin.reflect.KClass
 
 /**
  * Represents the has many relation.
@@ -17,5 +18,8 @@ class HasMany<M : AbstractModel<M>, O : AbstractModel<O>>(
     /**
      * The related model.
      */
-    related: O
-) : DirectedRelation<M, O>(builder, related)
+    override val related: Int,
+    override val relatedModelClass: KClass<O>
+) : DirectedRelation<M, O>(builder, related, relatedModelClass) {
+
+}

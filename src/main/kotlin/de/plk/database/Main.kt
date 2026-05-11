@@ -18,7 +18,7 @@ import kotlin.system.measureTimeMillis
 fun main() {
     val properties = Properties()
 
-   properties.setProperty("hostname", "localhost")
+    properties.setProperty("hostname", "localhost")
     properties.setProperty("port", "3306")
     properties.setProperty("database", "jvm_database")
     properties.setProperty("username", "root")
@@ -37,11 +37,18 @@ fun main() {
     AbstractModel.getSchema(MemberRankPivot::class).create()
 
     val time = measureTimeMillis {
-        val member = Member(memberId = 2)
+        val group = Group(id = 1)
+        group.groupName = "Admin"
+        group.kuerzel = "ADM"
+        group.save()
 
-        member.load()
+        val member = Member(id = 1)
+        member.groups_id = group.id
+        member.name = "Phil"
+        member.save()
 
         println(member.name)
+        println(member.group().getRelated()?.groupName)
     }
 
     println("IT takes: $time ms")

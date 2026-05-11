@@ -21,15 +21,10 @@ import java.util.UUID
 )
 @Table("members")
 class Member(
-    @Column(
-        columnName = "memberId",
-        primary = true,
-        nullable = false,
-        dataType = ColumnDataType.INT
-    ) var memberId: Int? = null
-) : AbstractModel<Member>() {
+    id: Int? = null
+) : AbstractModel<Member>(id) {
 
-    constructor(memberId: Int?, name: String): this(memberId) {
+    constructor(id: Int?, name: String): this(id) {
         this.name = name
     }
 
@@ -48,12 +43,12 @@ class Member(
         super.boot(model)
 
         event(ModelEventType.SAVING) {
-            println("SAVING memberId: " + it.memberId)
+            println("SAVING memberId: " + it.id)
             println("SAVING name: " + it.name)
         }
 
         event(ModelEventType.UPDATED) {
-            println("UPDATING memberId: " + it.memberId)
+            println("UPDATING memberId: " + it.id)
             println("UPDATING name: " + it.name)
         }
 
@@ -65,6 +60,13 @@ class Member(
     fun scopeNameStartsWithPhil() {
         where("name", "Phil%", Operand.LIKE)
     }
+
+
+    @Column(
+        columnName = "groups_id",
+        dataType = ColumnDataType.INT
+    )
+    var groups_id: Int? = null
 
     @Relation(
         relationType = BelongsTo::class,
