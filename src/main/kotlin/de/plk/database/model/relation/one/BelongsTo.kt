@@ -1,9 +1,8 @@
 package de.plk.database.model.relation.one
 
 import de.plk.database.model.AbstractModel
-import de.plk.database.model.relation.DirectedRelation
+import de.plk.database.model.relation.Relation
 import de.plk.database.sql.build.QueryBuilder
-import de.plk.database.sql.command.Command
 import kotlin.reflect.KClass
 
 /**
@@ -22,7 +21,7 @@ class BelongsTo<M : AbstractModel<M>, O : AbstractModel<O>> (
     override val related: Int,
 
     override val relatedModelClass: KClass<O>
-) : DirectedRelation<M, O>(builder, related, relatedModelClass) {
+) : Relation<M, O>(builder, related, relatedModelClass) {
 
 
 }

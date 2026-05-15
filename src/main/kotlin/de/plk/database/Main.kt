@@ -42,13 +42,24 @@ fun main() {
         group.kuerzel = "ADM"
         group.save()
 
+
+        println(DatabasePool.POOL.size)
         val member = Member(id = 1)
         member.groups_id = group.id
         member.name = "Phil"
+
+        println(DatabasePool.POOL.size)
+
         member.save()
+
+        println(DatabasePool.POOL.size)
 
         println(member.name)
         println(member.group().getRelated()?.groupName)
+
+        val r = member.group().getRelated()
+        r?.groupName = "Moderator"
+        r?.save()
     }
 
     println("IT takes: $time ms")

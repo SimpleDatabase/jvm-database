@@ -320,7 +320,7 @@ abstract class AbstractModel<M : AbstractModel<M>> : QueryBuilder<M>, ModelOpera
             return Blueprint(model, table, columns)
         }
 
-        fun <O : AbstractModel<O>> loadFromId(relatedModelClass: KClass<O>, related: Int): O? {
+        fun <O : AbstractModel<O>> loadFromId(relatedModelClass: KClass<O>, related: Int): O {
             val ctx = relatedModelClass.constructors.first()
 
             val instance = ctx.call(related)

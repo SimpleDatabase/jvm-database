@@ -111,7 +111,7 @@ enum class Command(
 
                             // go to snack each row in table.
                             while (callback.next()) {
-                                result.resultSet.put(callback.row, mutableMapOf())
+                                result.resultSet[callback.row] = mutableMapOf()
 
                                 // add all the queried columns to the query map.
                                 commandReplacements[0].split(", ").forEach {

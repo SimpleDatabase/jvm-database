@@ -89,8 +89,10 @@ class DatabasePool(
      * This method will fillup the {@link #POOL} with new {@link Connection}`s.
      */
     private fun fill() {
-        for (index in 0..(poolSize - POOL.size))
+        while (POOL.size < poolSize) {
+            println("Creating new connection for pool... (${POOL.size + 1}/$poolSize)")
             POOL.push(createConnection())
+        }
     }
 
     companion object {

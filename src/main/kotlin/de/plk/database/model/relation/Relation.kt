@@ -20,4 +20,13 @@ open class Relation<M : AbstractModel<M>, O : AbstractModel<O>>(
     open val related: Int,
 
     open val relatedModelClass: KClass<O>
-)
+) {
+    /**
+     * The related model.
+     */
+    open fun getRelated(): O? {
+        return AbstractModel.loadFromId(
+            relatedModelClass, related
+        )
+    }
+}
